@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Assistant Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f7f8fc; --panel:#ffffff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
+      --primary:#2563eb; --primary-2:#1d4ed8; --accent:#f59e0b; --success:#16a34a; --danger:#ef4444;
+      --shadow:0 18px 40px rgba(15,23,42,.10); --radius:22px; --word-highlight:#fef08a;
+      --focus-bg:#fffdf5; --focus-text:#111827; --toolbar-h:58px;
+    }
+    body.dark{--bg:#0f172a;--panel:#111827;--text:#f8fafc;--muted:#cbd5e1;--line:#334155;--primary:#60a5fa;--primary-2:#3b82f6;--word-highlight:#f97316;--focus-bg:#020617;--focus-text:#f8fafc;--shadow:0 18px 40px rgba(0,0,0,.35)}
+    body.contrast{--bg:#000;--panel:#000;--text:#fff200;--muted:#fff200;--line:#fff200;--primary:#fff200;--primary-2:#fff200;--accent:#00ffff;--success:#00ff66;--danger:#ff3333;--word-highlight:#ff3333;--focus-bg:#000;--focus-text:#fff200;--shadow:0 0 0 3px #fff200}
+    *{box-sizing:border-box} html,body{min-height:100%;margin:0} body{font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,var(--bg),#eef2ff);color:var(--text);padding:18px;transition:.25s ease;color-scheme:light}
+    body.dark, body.contrast{background:var(--bg);color-scheme:dark}
+    .app{max-width:1180px;margin:0 auto;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden}
+    header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);gap:12px}
+    .brand{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,var(--primary),#8b5cf6);display:grid;place-items:center;color:#fff;font-weight:800}.title h1{font-size:1.1rem;margin:0}.title p{margin:2px 0 0;color:var(--muted);font-size:.82rem}
+    .top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn{border:0;background:var(--primary);color:#fff;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.18s ease;min-height:40px}.btn:hover{transform:translateY(-1px);filter:brightness(.98)}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.btn.success{background:var(--success)}.btn.danger{background:var(--danger)}
+    .content{padding:16px;display:grid;gap:14px}.compact-stats{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}.progress-wrap{height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden;position:relative}.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),#22c55e);border-radius:999px;transition:width .25s ease}.milestone-dots{position:absolute;inset:0;display:flex;justify-content:space-between;padding:0 2px;pointer-events:none}.milestone-dots span{width:10px;height:10px;align-self:center;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.18)}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-weight:800;white-space:nowrap;background:rgba(255,255,255,.35)}
+    .editor-card,.practice-card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.45);overflow:hidden}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border-bottom:1px solid var(--line);background:rgba(248,250,252,.65)}body.dark .toolbar{background:rgba(15,23,42,.65)}.tool{height:38px;min-width:38px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font-weight:800;cursor:pointer;padding:0 10px}.tool.active,.tool:hover{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.10)}select.tool{font-weight:700;min-width:125px}.divider{width:1px;height:28px;background:var(--line);margin:0 2px}
+    #editor{min-height:180px;max-height:310px;overflow:auto;padding:18px;font-size:24px;line-height:1.55;outline:none;background:var(--panel)}#editor:empty:before{content:attr(data-placeholder);color:var(--muted)}#editor ul,#editor ol,#display ul,#display ol{margin-top:.2em;margin-bottom:.2em;padding-left:1.5em}#editor li,#display li{margin:.12em 0}
+    .controls-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:10px;align-items:end}.field label{display:block;font-size:.78rem;color:var(--muted);font-weight:800;margin:0 0 6px 2px}.range,.select{width:100%;height:42px;border:1px solid var(--line);border-radius:14px;padding:0 10px;background:var(--panel);color:var(--text);font-weight:700}.play-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:11px;border-top:1px solid var(--line)}.round{width:46px;height:46px;border-radius:50%;border:0;background:var(--primary);color:#fff;font-size:1.05rem;cursor:pointer}.round.light{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .writing-area{height:330px;overflow:auto;padding:22px;background:var(--focus-bg);border-top:1px solid var(--line)}#display{font-size:34px;line-height:1.7;color:var(--focus-text);white-space:normal;overflow-wrap:anywhere}.current-word{background:var(--word-highlight)!important;color:#111!important;border-radius:10px;padding:1px 7px;box-decoration-break:clone;-webkit-box-decoration-break:clone;box-shadow:0 0 0 3px rgba(245,158,11,.22)}.new-line-mark{display:inline-block;margin:0 8px;width:12px;height:12px;border-radius:50%;background:var(--primary);vertical-align:middle}.word-color span.word-token:nth-of-type(6n+1){color:#dc2626}.word-color span.word-token:nth-of-type(6n+2){color:#2563eb}.word-color span.word-token:nth-of-type(6n+3){color:#16a34a}.word-color span.word-token:nth-of-type(6n+4){color:#9333ea}.word-color span.word-token:nth-of-type(6n+5){color:#c2410c}.word-color span.word-token:nth-of-type(6n+6){color:#0f766e}
+    .focus-head{display:none}.reward{position:fixed;left:50%;top:18%;transform:translate(-50%,-20px) scale(.95);opacity:0;z-index:9999;background:var(--panel);color:var(--text);border:3px solid var(--accent);border-radius:28px;padding:24px 34px;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.25);pointer-events:none}.reward.show{animation:pop 2.2s ease}.reward .big{font-size:3.4rem;line-height:1}.reward h2{margin:8px 0 4px;font-size:1.65rem}.reward p{margin:0;color:var(--muted);font-weight:700}@keyframes pop{0%{opacity:0;transform:translate(-50%,-20px) scale(.85)}15%,78%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
+    body.focus .app{position:fixed;inset:0;z-index:5000;max-width:none;border-radius:0;border:0;background:var(--focus-bg);display:flex;flex-direction:column}body.focus header,body.focus .editor-card,body.focus .controls-grid,body.focus .practice-card>.toolbar{display:none}.focus-head{align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(12px)}body.dark.focus .focus-head{background:rgba(2,6,23,.88)}body.focus .focus-head{display:flex}.focus-progress{flex:1}.focus-label{font-weight:900;font-size:1.05rem;min-width:72px;text-align:right}.focus-mini{font-weight:800;color:var(--muted);font-size:.9rem}.focus-exit{border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:9px 12px;font-weight:800;cursor:pointer}body.focus .content{padding:0;display:flex;flex:1;min-height:0}body.focus .practice-card{border:0;border-radius:0;flex:1;display:flex;flex-direction:column;background:var(--focus-bg)}body.focus .writing-area{height:auto;flex:1;border:0;padding:5vh 6vw;background:var(--focus-bg)}body.focus #display{font-size:clamp(42px,5.2vw,82px);line-height:1.65;max-width:1500px;margin:auto}body.focus .play-row{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.85);box-shadow:0 12px 28px rgba(0,0,0,.13);padding:8px 10px;backdrop-filter:blur(12px)}body.dark.focus .play-row{background:rgba(2,6,23,.85)}body.focus .compact-stats{display:none}.hidden{display:none!important}
+    @media(max-width:850px){.compact-stats{grid-template-columns:1fr}.controls-grid{grid-template-columns:1fr 1fr}#display{font-size:28px}.top-actions{width:100%}header{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <div class="brand"><div class="logo">✍️</div><div class="title"><h1>Writing Assistant Pro</h1><p>Paste, format, play, and reward progress on the whiteboard.</p></div></div>
+      <div class="top-actions"><button class="btn secondary" onclick="cycleTheme()">Theme</button><button class="btn secondary" onclick="toggleWordColors()">Word Colors</button><button class="btn success" onclick="startPractice()">Start Writing</button><button class="btn" onclick="enterFocusMode()">Focus Mode</button></div>
+    </header>
+
+    <div class="focus-head">
+      <div class="focus-progress"><div class="progress-wrap"><div class="progress-fill" id="focus-fill"></div><div class="milestone-dots"><span></span><span></span><span></span><span></span><span></span></div></div></div>
+      <div class="focus-label" id="focus-percent">0%</div><div class="focus-mini" id="focus-speed">20 WPM</div><button class="focus-exit" onclick="exitFocusMode()">Exit</button>
+    </div>
+
+    <main class="content">
+      <section class="compact-stats">
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div><div class="milestone-dots"><span></span><span></span><span></span><span></span><span></span></div></div>
+        <div class="pill" id="progress-text">0% complete</div><div class="pill" id="time-text">0 min</div>
+      </section>
+
+      <section class="editor-card">
+        <div class="toolbar" aria-label="Editor formatting toolbar">
+          <button class="tool" onclick="formatDoc('bold')"><b>B</b></button><button class="tool" onclick="formatDoc('italic')"><i>I</i></button><button class="tool" onclick="formatDoc('underline')"><u>U</u></button><span class="divider"></span>
+          <button class="tool" onclick="formatDoc('insertUnorderedList')">• List</button><button class="tool" onclick="formatDoc('insertOrderedList')">1. List</button><span class="divider"></span>
+          <button class="tool" onclick="changeEditorFontSize(-2)">A−</button><button class="tool" onclick="changeEditorFontSize(2)">A+</button>
+          <select class="tool" id="editor-font" onchange="setEditorFont(this.value)"><option value="Inter">Inter</option><option value="Open Sans">Open Sans</option><option value="Atkinson Hyperlegible">Atkinson</option><option value="Comic Neue">Comic Neue</option><option value="Georgia">Georgia</option><option value="Arial">Arial</option></select>
+          <button class="tool" onclick="clearEditor()">Clear</button>
+        </div>
+        <div id="editor" contenteditable="true" data-placeholder="Paste or type the students’ writing text here. Formatting, bold, italic, underline, and lists will be preserved during playback."></div>
+      </section>
+
+      <section class="controls-grid">
+        <div class="field"><label for="speed">Speed: <span id="speed-value">20 WPM</span></label><input class="range" id="speed" type="range" min="5" max="120" value="20" oninput="updateSpeed()"></div>
+        <div class="field"><label for="display-font-size">Display Font Size</label><input class="range" id="display-font-size" type="range" min="24" max="72" value="34" oninput="updateDisplayStyle()"></div>
+        <div class="field"><label for="display-font">Display Font</label><select class="select" id="display-font" onchange="updateDisplayStyle()"><option value="Atkinson Hyperlegible">Atkinson</option><option value="Inter">Inter</option><option value="Open Sans">Open Sans</option><option value="Comic Neue">Comic Neue</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option></select></div>
+        <div class="field"><label for="reward-style">Reward Style</label><select class="select" id="reward-style"><option value="stars">Stars</option><option value="badges">Badges</option><option value="simple">Simple</option></select></div>
+      </section>
+
+      <section class="practice-card">
+        <div class="toolbar"><strong>Preview / Playback</strong><span style="color:var(--muted);font-weight:700">Formatting is preserved here.</span></div>
+        <div class="writing-area" id="writing-area"><div id="display"></div></div>
+        <div class="play-row">
+          <button class="round light" onclick="previousWord()" title="Previous word">←</button><button class="round" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button><button class="round light" onclick="nextWord()" title="Next word">→</button>
+          <button class="round light" onclick="previousLine()" title="Previous line">↰</button><button class="round light" onclick="nextLine()" title="Next line">↱</button><button class="round light" onclick="resetPractice()" title="Reset">↻</button><button class="round light" onclick="enterFocusMode()" title="Focus mode">⛶</button>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="reward" id="reward"><div class="big" id="reward-icon">⭐</div><h2 id="reward-title">25% completed!</h2><p id="reward-msg">Great start. Keep going!</p></div>
+
+<script>
+  let tokens=[], currentIndex=0, intervalId=null, isPlaying=false, editorFontSize=24, theme=0, wordColors=false;
+  const milestones=[25,50,75,90,100]; const hitMilestones=new Set();
+  const messages={25:['⭐','25% completed!','Great start. The page is moving!'],50:['🏅','Halfway done!','Excellent focus. Keep your handwriting neat.'],75:['🚀','75% completed!','Only a little more to go. Stay steady.'],90:['🔥','90% completed!','Final stretch. Finish strong!'],100:['🎉','100% completed!','Wonderful work. You completed the writing task!']};
+
+  function formatDoc(cmd){document.execCommand(cmd,false,null); document.getElementById('editor').focus();}
+  function setEditorFont(font){document.getElementById('editor').style.fontFamily=font;}
+  function changeEditorFontSize(delta){editorFontSize=Math.max(18,Math.min(42,editorFontSize+delta));document.getElementById('editor').style.fontSize=editorFontSize+'px';}
+  function clearEditor(){document.getElementById('editor').innerHTML=''; resetPractice();}
+  function cycleTheme(){theme=(theme+1)%3; document.body.classList.remove('dark','contrast'); if(theme===1)document.body.classList.add('dark'); if(theme===2)document.body.classList.add('contrast');}
+  function toggleWordColors(){wordColors=!wordColors; document.getElementById('display').classList.toggle('word-color',wordColors);}
+
+  function sanitizeEditorClone(){
+    const clone=document.getElementById('editor').cloneNode(true);
+    clone.querySelectorAll('script,style,iframe,object,embed').forEach(n=>n.remove());
+    clone.querySelectorAll('*').forEach(el=>{[...el.attributes].forEach(a=>{if(/^on/i.test(a.name))el.removeAttribute(a.name)});});
+    return clone;
+  }
+  function prepareTokens(){
+    const clone=sanitizeEditorClone(); tokens=[]; let idx=0;
+    const walker=document.createTreeWalker(clone,NodeFilter.SHOW_TEXT,{acceptNode(n){return /\S/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
+    const textNodes=[]; while(walker.nextNode()) textNodes.push(walker.currentNode);
+    textNodes.forEach(node=>{
+      const frag=document.createDocumentFragment(); const parts=node.nodeValue.match(/\S+|\s+/g)||[];
+      parts.forEach(part=>{
+        if(/\S/.test(part)){const span=document.createElement('span');span.className='word-token';span.dataset.index=idx++;span.textContent=part;frag.appendChild(span);tokens.push(span.dataset.index);} else frag.appendChild(document.createTextNode(part));
+      }); node.parentNode.replaceChild(frag,node);
+    });
+    const display=document.getElementById('display'); display.innerHTML=clone.innerHTML.trim()||'<span style="color:var(--muted)">Your formatted text will appear here.</span>';
+    if(wordColors) display.classList.add('word-color'); else display.classList.remove('word-color');
+    tokens=[...display.querySelectorAll('.word-token')]; currentIndex=Math.min(currentIndex,Math.max(tokens.length-1,0));
+  }
+  function startPractice(){
+    if(!document.getElementById('editor').innerText.trim()) return;
+    stopPlayback(); currentIndex=0; hitMilestones.clear(); prepareTokens(); updateDisplayStyle(); highlightCurrent(); updateProgress(); play();
+  }
+  function play(){if(!tokens.length) startPractice(); isPlaying=true; document.getElementById('play-btn').textContent='⏸'; startInterval();}
+  function stopPlayback(){clearInterval(intervalId); isPlaying=false; document.getElementById('play-btn').textContent='▶';}
+  function togglePlay(){isPlaying?stopPlayback():play();}
+  function startInterval(){clearInterval(intervalId); const wpm=+document.getElementById('speed').value; intervalId=setInterval(()=>{ if(currentIndex>=tokens.length-1){currentIndex=tokens.length-1; highlightCurrent(); updateProgress(); stopPlayback(); maybeReward(100); return;} currentIndex++; highlightCurrent(); updateProgress(); },60000/wpm);}
+  function highlightCurrent(){tokens.forEach(t=>t.classList.remove('current-word')); const token=tokens[currentIndex]; if(token){token.classList.add('current-word'); token.scrollIntoView({block:'center',behavior:'smooth'});}}
+  function nextWord(){if(!tokens.length) startPractice(); currentIndex=Math.min(tokens.length-1,currentIndex+1); highlightCurrent(); updateProgress();}
+  function previousWord(){currentIndex=Math.max(0,currentIndex-1); highlightCurrent(); updateProgress();}
+  function nextLine(){moveLine(1)} function previousLine(){moveLine(-1)}
+  function moveLine(dir){if(!tokens.length)return; const top=tokens[currentIndex].offsetTop; let candidate=currentIndex; if(dir>0){for(let i=currentIndex+1;i<tokens.length;i++){if(tokens[i].offsetTop>top+8){candidate=i;break;}}} else {for(let i=currentIndex-1;i>=0;i--){if(tokens[i].offsetTop<top-8){candidate=i; while(candidate>0 && Math.abs(tokens[candidate-1].offsetTop-tokens[candidate].offsetTop)<8)candidate--; break;}}} currentIndex=candidate; highlightCurrent(); updateProgress();}
+  function resetPractice(){stopPlayback(); currentIndex=0; hitMilestones.clear(); prepareTokens(); highlightCurrent(); updateProgress();}
+  function updateSpeed(){document.getElementById('speed-value').textContent=document.getElementById('speed').value+' WPM';document.getElementById('focus-speed').textContent=document.getElementById('speed').value+' WPM';updateProgress(); if(isPlaying)startInterval();}
+  function updateDisplayStyle(){const size=document.getElementById('display-font-size').value; const font=document.getElementById('display-font').value; const d=document.getElementById('display'); d.style.fontSize=size+'px'; d.style.fontFamily=font;}
+  function updateProgress(){const total=tokens.length||1; const pct=tokens.length?Math.min(100,Math.round(((currentIndex+1)/total)*100)):0; ['progress-fill','focus-fill'].forEach(id=>document.getElementById(id).style.width=pct+'%'); document.getElementById('progress-text').textContent=pct+'% complete'; document.getElementById('focus-percent').textContent=pct+'%'; const wpm=+document.getElementById('speed').value; const mins=Math.ceil(Math.max(total-currentIndex-1,0)/wpm); document.getElementById('time-text').textContent=mins+' min left'; milestones.forEach(m=>{if(pct>=m)maybeReward(m)});}
+  function maybeReward(m){if(hitMilestones.has(m))return; hitMilestones.add(m); const [icon,title,msg]=messages[m]; const style=document.getElementById('reward-style').value; document.getElementById('reward-icon').textContent=style==='simple'?'✓':icon; document.getElementById('reward-title').textContent=title; document.getElementById('reward-msg').textContent=msg; const r=document.getElementById('reward'); r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');}
+  async function enterFocusMode(){if(!tokens.length && document.getElementById('editor').innerText.trim()) startPractice(); document.body.classList.add('focus'); try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); }catch(e){} highlightCurrent();}
+  async function exitFocusMode(){document.body.classList.remove('focus'); try{ if(document.fullscreenElement) await document.exitFullscreen(); }catch(e){}}
+  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('focus')});
+  document.getElementById('editor').addEventListener('paste',e=>{setTimeout(()=>{prepareTokens();updateDisplayStyle();highlightCurrent();updateProgress();},0)});
+  document.getElementById('editor').innerHTML='<ol><li><b>Good handwriting</b> shows clear thinking.</li><li><i>Write slowly</i>, keep spaces, and finish with confidence.</li><li><u>Every line completed</u> is progress.</li></ol>';
+  window.onload=()=>{prepareTokens();updateDisplayStyle();updateSpeed();highlightCurrent();updateProgress();};
+</script>
+</body>
+</html>
