@@ -590,7 +590,13 @@
 
     #editor p,
     #display p {
-      margin: 0 0 0.75em;
+      margin: 0;
+      min-height: 1lh;
+    }
+
+    #editor div,
+    #display div {
+      min-height: 1lh;
     }
 
     #editor h1,
@@ -601,7 +607,7 @@
     #display h2,
     #display h3,
     #display h4 {
-      margin: 0.34em 0 0.22em;
+      margin: 0.12em 0;
       line-height: 1.22;
       letter-spacing: 0;
     }
@@ -804,6 +810,22 @@
       opacity: 0.72;
     }
 
+    .guide-line.heading-guide {
+      border-top-width: 3px;
+      opacity: 0.95;
+    }
+
+    .guide-line.heading-top-guide {
+      border-top-width: 1px;
+      border-top-style: dashed;
+      opacity: 0.5;
+    }
+
+    .guide-line.blank-guide {
+      border-top-style: dashed;
+      opacity: 0.62;
+    }
+
     #display {
       position: relative;
       z-index: 1;
@@ -834,9 +856,7 @@
     }
 
     #display .blank-line-anchor {
-      display: inline-block;
-      width: 1px;
-      height: 1em;
+      display: inline;
       color: transparent;
       opacity: 0;
       pointer-events: none;
@@ -1855,6 +1875,7 @@
       const keepBackgrounds = options.keepBackgrounds !== false;
       const keepFontWeight = options.keepFontWeight !== false;
       const keepFontFamily = options.keepFontFamily !== false;
+      const keepSpacing = options.keepSpacing !== false;
       const keep = [];
       const push = (property, value, validator = Boolean) => {
         if (value && validator(value)) keep.push(property + ":" + value);
@@ -1872,9 +1893,11 @@
       push("letter-spacing", style.letterSpacing, value => value === "normal" || isSafeCssSize(value));
       if (keepColors) push("color", style.color, isSafeCssColor);
       if (keepBackgrounds) push("background-color", style.backgroundColor, isSafeCssColor);
-      push("margin-top", style.marginTop, isSafeCssSize);
-      push("margin-bottom", style.marginBottom, isSafeCssSize);
-      push("padding-left", style.paddingLeft, isSafeCssSize);
+      if (keepSpacing) {
+        push("margin-top", style.marginTop, isSafeCssSize);
+        push("margin-bottom", style.marginBottom, isSafeCssSize);
+        push("padding-left", style.paddingLeft, isSafeCssSize);
+      }
       return keep;
     }
 
@@ -1911,7 +1934,7 @@
 
     function sanitizeEditorClone() {
       const clone = $("editor").cloneNode(true);
-      cleanRichFragment(clone, { keepColors: false, keepBackgrounds: false, keepFontWeight: false, keepFontFamily: false });
+      cleanRichFragment(clone, { keepColors: false, keepBackgrounds: false, keepFontWeight: false, keepFontFamily: false, keepSpacing: false });
       return clone;
     }
 
@@ -2206,12 +2229,16 @@
 
       const lineAnchors = [...display.querySelectorAll(".word-token, .blank-line-anchor")];
       lineAnchors.forEach(anchor => {
+        const heading = anchor.closest("h1, h2, h3, h4");
+        const blank = anchor.classList.contains("blank-line-anchor");
         [...anchor.getClientRects()].forEach(rect => {
           if (rect.width > 0 && rect.height > 0) {
             rects.push({
               top: rect.top,
               bottom: rect.bottom,
-              center: rect.top + rect.height / 2
+              center: rect.top + rect.height / 2,
+              heading: Boolean(heading),
+              blank
             });
           }
         });
@@ -2230,6 +2257,8 @@
           last.top = Math.min(last.top, rect.top);
           last.bottom = Math.max(last.bottom, rect.bottom);
           last.center = (last.center + rect.center) / 2;
+          last.heading = last.heading || rect.heading;
+          last.blank = last.blank || rect.blank;
         } else {
           lines.push({ ...rect });
         }
@@ -2237,10 +2266,16 @@
 
       lines.forEach((line, index) => {
         const nextTop = lines[index + 1] ? lines[index + 1].top - areaRect.top + area.scrollTop : Infinity;
+        const visualTop = line.top - areaRect.top + area.scrollTop;
         const visualBottom = line.bottom - areaRect.top + area.scrollTop;
         const offset = Math.max(2, Math.min(5, fontSize * 0.09));
         const y = Math.min(visualBottom + offset, nextTop - 5);
-        addGuideLine(layer, y);
+        if (line.heading) {
+          addGuideLine(layer, Math.max(0, visualTop - offset), "heading-top-guide");
+          addGuideLine(layer, y, "heading-guide");
+        } else {
+          addGuideLine(layer, y, line.blank ? "blank-guide" : "");
+        }
       });
     }
 
@@ -2255,10 +2290,10 @@
       for (let y = startY; y < maxY; y += lineHeight) addGuideLine(layer, y);
     }
 
-    function addGuideLine(layer, y) {
+    function addGuideLine(layer, y, extraClass = "") {
       if (!Number.isFinite(y) || y < 0) return;
       const line = document.createElement("div");
-      line.className = "guide-line";
+      line.className = ("guide-line " + extraClass).trim();
       line.style.top = Math.round(y) + "px";
       layer.appendChild(line);
     }
