@@ -3,139 +3,2460 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing Assistant Pro</title>
+  <title>Writing Assistant Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#f7f8fc; --panel:#ffffff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
-      --primary:#2563eb; --primary-2:#1d4ed8; --accent:#f59e0b; --success:#16a34a; --danger:#ef4444;
-      --shadow:0 18px 40px rgba(15,23,42,.10); --radius:22px; --word-highlight:#fef08a;
-      --focus-bg:#fffdf5; --focus-text:#111827; --toolbar-h:58px;
+    :root {
+      --page-bg: #eef3fb;
+      --page-accent: #d9e7ff;
+      --surface: #ffffff;
+      --surface-soft: #f5f8fc;
+      --surface-raised: #ffffff;
+      --text: #142033;
+      --muted: #59677a;
+      --line: #d8e0eb;
+      --primary: #2857b8;
+      --primary-strong: #1d4090;
+      --primary-soft: #e8f0ff;
+      --accent: #0f8b6f;
+      --success: #16844f;
+      --danger: #c7353b;
+      --warning: #b86b00;
+      --display-bg: #fffdf8;
+      --display-text: #121926;
+      --highlight-bg: #1f4fb2;
+      --highlight-text: #ffffff;
+      --focus-bar-bg: rgba(255, 255, 255, 0.92);
+      --guide-line: #aebfd6;
+      --line-dot: #1f5fbf;
+      --shadow: 0 20px 50px rgba(30, 45, 70, 0.12);
+      --radius: 8px;
+      --word-0: #b42318;
+      --word-1: #1d4ed8;
+      --word-2: #047857;
+      --word-3: #7c3aed;
+      --word-4: #9a3412;
+      --word-5: #0369a1;
+      --word-6: #be185d;
+      --word-7: #365314;
     }
-    body.dark{--bg:#0f172a;--panel:#111827;--text:#f8fafc;--muted:#cbd5e1;--line:#334155;--primary:#60a5fa;--primary-2:#3b82f6;--word-highlight:#f97316;--focus-bg:#020617;--focus-text:#f8fafc;--shadow:0 18px 40px rgba(0,0,0,.35)}
-    body.contrast{--bg:#000;--panel:#000;--text:#fff200;--muted:#fff200;--line:#fff200;--primary:#fff200;--primary-2:#fff200;--accent:#00ffff;--success:#00ff66;--danger:#ff3333;--word-highlight:#ff3333;--focus-bg:#000;--focus-text:#fff200;--shadow:0 0 0 3px #fff200}
-    *{box-sizing:border-box} html,body{min-height:100%;margin:0} body{font-family:Inter,Arial,sans-serif;background:linear-gradient(135deg,var(--bg),#eef2ff);color:var(--text);padding:18px;transition:.25s ease;color-scheme:light}
-    body.dark, body.contrast{background:var(--bg);color-scheme:dark}
-    .app{max-width:1180px;margin:0 auto;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden}
-    header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);gap:12px}
-    .brand{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,var(--primary),#8b5cf6);display:grid;place-items:center;color:#fff;font-weight:800}.title h1{font-size:1.1rem;margin:0}.title p{margin:2px 0 0;color:var(--muted);font-size:.82rem}
-    .top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn{border:0;background:var(--primary);color:#fff;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.18s ease;min-height:40px}.btn:hover{transform:translateY(-1px);filter:brightness(.98)}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}.btn.success{background:var(--success)}.btn.danger{background:var(--danger)}
-    .content{padding:16px;display:grid;gap:14px}.compact-stats{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}.progress-wrap{height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden;position:relative}.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),#22c55e);border-radius:999px;transition:width .25s ease}.milestone-dots{position:absolute;inset:0;display:flex;justify-content:space-between;padding:0 2px;pointer-events:none}.milestone-dots span{width:10px;height:10px;align-self:center;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.18)}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-weight:800;white-space:nowrap;background:rgba(255,255,255,.35)}
-    .editor-card,.practice-card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.45);overflow:hidden}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border-bottom:1px solid var(--line);background:rgba(248,250,252,.65)}body.dark .toolbar{background:rgba(15,23,42,.65)}.tool{height:38px;min-width:38px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font-weight:800;cursor:pointer;padding:0 10px}.tool.active,.tool:hover{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.10)}select.tool{font-weight:700;min-width:125px}.divider{width:1px;height:28px;background:var(--line);margin:0 2px}
-    #editor{min-height:180px;max-height:310px;overflow:auto;padding:18px;font-size:24px;line-height:1.55;outline:none;background:var(--panel)}#editor:empty:before{content:attr(data-placeholder);color:var(--muted)}#editor ul,#editor ol,#display ul,#display ol{margin-top:.2em;margin-bottom:.2em;padding-left:1.5em}#editor li,#display li{margin:.12em 0}
-    .controls-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:10px;align-items:end}.field label{display:block;font-size:.78rem;color:var(--muted);font-weight:800;margin:0 0 6px 2px}.range,.select{width:100%;height:42px;border:1px solid var(--line);border-radius:14px;padding:0 10px;background:var(--panel);color:var(--text);font-weight:700}.play-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:11px;border-top:1px solid var(--line)}.round{width:46px;height:46px;border-radius:50%;border:0;background:var(--primary);color:#fff;font-size:1.05rem;cursor:pointer}.round.light{background:transparent;color:var(--text);border:1px solid var(--line)}
-    .writing-area{height:330px;overflow:auto;padding:22px;background:var(--focus-bg);border-top:1px solid var(--line)}#display{font-size:34px;line-height:1.7;color:var(--focus-text);white-space:normal;overflow-wrap:anywhere}.current-word{background:var(--word-highlight)!important;color:#111!important;border-radius:10px;padding:1px 7px;box-decoration-break:clone;-webkit-box-decoration-break:clone;box-shadow:0 0 0 3px rgba(245,158,11,.22)}.new-line-mark{display:inline-block;margin:0 8px;width:12px;height:12px;border-radius:50%;background:var(--primary);vertical-align:middle}.word-color span.word-token:nth-of-type(6n+1){color:#dc2626}.word-color span.word-token:nth-of-type(6n+2){color:#2563eb}.word-color span.word-token:nth-of-type(6n+3){color:#16a34a}.word-color span.word-token:nth-of-type(6n+4){color:#9333ea}.word-color span.word-token:nth-of-type(6n+5){color:#c2410c}.word-color span.word-token:nth-of-type(6n+6){color:#0f766e}
-    .focus-head{display:none}.reward{position:fixed;left:50%;top:18%;transform:translate(-50%,-20px) scale(.95);opacity:0;z-index:9999;background:var(--panel);color:var(--text);border:3px solid var(--accent);border-radius:28px;padding:24px 34px;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.25);pointer-events:none}.reward.show{animation:pop 2.2s ease}.reward .big{font-size:3.4rem;line-height:1}.reward h2{margin:8px 0 4px;font-size:1.65rem}.reward p{margin:0;color:var(--muted);font-weight:700}@keyframes pop{0%{opacity:0;transform:translate(-50%,-20px) scale(.85)}15%,78%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
-    body.focus .app{position:fixed;inset:0;z-index:5000;max-width:none;border-radius:0;border:0;background:var(--focus-bg);display:flex;flex-direction:column}body.focus header,body.focus .editor-card,body.focus .controls-grid,body.focus .practice-card>.toolbar{display:none}.focus-head{align-items:center;gap:14px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(12px)}body.dark.focus .focus-head{background:rgba(2,6,23,.88)}body.focus .focus-head{display:flex}.focus-progress{flex:1}.focus-label{font-weight:900;font-size:1.05rem;min-width:72px;text-align:right}.focus-mini{font-weight:800;color:var(--muted);font-size:.9rem}.focus-exit{border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:9px 12px;font-weight:800;cursor:pointer}body.focus .content{padding:0;display:flex;flex:1;min-height:0}body.focus .practice-card{border:0;border-radius:0;flex:1;display:flex;flex-direction:column;background:var(--focus-bg)}body.focus .writing-area{height:auto;flex:1;border:0;padding:5vh 6vw;background:var(--focus-bg)}body.focus #display{font-size:clamp(42px,5.2vw,82px);line-height:1.65;max-width:1500px;margin:auto}body.focus .play-row{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.85);box-shadow:0 12px 28px rgba(0,0,0,.13);padding:8px 10px;backdrop-filter:blur(12px)}body.dark.focus .play-row{background:rgba(2,6,23,.85)}body.focus .compact-stats{display:none}.hidden{display:none!important}
-    @media(max-width:850px){.compact-stats{grid-template-columns:1fr}.controls-grid{grid-template-columns:1fr 1fr}#display{font-size:28px}.top-actions{width:100%}header{align-items:flex-start;flex-direction:column}}
+
+    body[data-theme="chalk"] {
+      --page-bg: #10251f;
+      --page-accent: #16362e;
+      --surface: #17352d;
+      --surface-soft: #102a24;
+      --surface-raised: #1d4338;
+      --text: #f2fff9;
+      --muted: #b6d3c7;
+      --line: #376558;
+      --primary: #8bd5ff;
+      --primary-strong: #b7e7ff;
+      --primary-soft: #203f42;
+      --accent: #ffd166;
+      --success: #8ee6a4;
+      --danger: #ff9aa2;
+      --warning: #ffd166;
+      --display-bg: #0d211c;
+      --display-text: #f8fff8;
+      --highlight-bg: #ffd166;
+      --highlight-text: #10251f;
+      --focus-bar-bg: rgba(13, 33, 28, 0.9);
+      --guide-line: #5f8a7d;
+      --line-dot: #8bd5ff;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+      --word-0: #ffb4a2;
+      --word-1: #93c5fd;
+      --word-2: #a7f3d0;
+      --word-3: #d8b4fe;
+      --word-4: #fde68a;
+      --word-5: #67e8f9;
+      --word-6: #f9a8d4;
+      --word-7: #bef264;
+      color-scheme: dark;
+    }
+
+    body[data-theme="sunshine"] {
+      --page-bg: #fff4bc;
+      --page-accent: #ffe58f;
+      --surface: #fffdf2;
+      --surface-soft: #fff7cd;
+      --surface-raised: #ffffff;
+      --text: #241a00;
+      --muted: #66501b;
+      --line: #e4c968;
+      --primary: #8a4b00;
+      --primary-strong: #653600;
+      --primary-soft: #ffed9e;
+      --accent: #1f5fbf;
+      --success: #116c35;
+      --danger: #a82f30;
+      --warning: #8a4b00;
+      --display-bg: #fffbe3;
+      --display-text: #201600;
+      --highlight-bg: #1f5fbf;
+      --highlight-text: #ffffff;
+      --focus-bar-bg: rgba(255, 253, 242, 0.94);
+      --guide-line: #c69f28;
+      --line-dot: #1f5fbf;
+      --shadow: 0 18px 42px rgba(113, 79, 0, 0.16);
+      --word-0: #9f1239;
+      --word-1: #1d4ed8;
+      --word-2: #166534;
+      --word-3: #6d28d9;
+      --word-4: #9a3412;
+      --word-5: #0f766e;
+      --word-6: #86198f;
+      --word-7: #3f6212;
+    }
+
+    body[data-theme="midnight"] {
+      --page-bg: #0d1324;
+      --page-accent: #111c33;
+      --surface: #121c30;
+      --surface-soft: #0f1728;
+      --surface-raised: #17233a;
+      --text: #f7fbff;
+      --muted: #b9c6d8;
+      --line: #30415f;
+      --primary: #8ab4ff;
+      --primary-strong: #c6dbff;
+      --primary-soft: #1d2e4c;
+      --accent: #7dd3fc;
+      --success: #86efac;
+      --danger: #fda4af;
+      --warning: #fde68a;
+      --display-bg: #080d18;
+      --display-text: #fbfdff;
+      --highlight-bg: #f8d66d;
+      --highlight-text: #111827;
+      --focus-bar-bg: rgba(8, 13, 24, 0.9);
+      --guide-line: #4d648b;
+      --line-dot: #7dd3fc;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --word-0: #fca5a5;
+      --word-1: #93c5fd;
+      --word-2: #86efac;
+      --word-3: #c4b5fd;
+      --word-4: #fdba74;
+      --word-5: #67e8f9;
+      --word-6: #f0abfc;
+      --word-7: #bef264;
+      color-scheme: dark;
+    }
+
+    body[data-theme="contrast"] {
+      --page-bg: #000000;
+      --page-accent: #000000;
+      --surface: #000000;
+      --surface-soft: #050505;
+      --surface-raised: #080808;
+      --text: #ffffff;
+      --muted: #fff36b;
+      --line: #fff36b;
+      --primary: #fff36b;
+      --primary-strong: #ffffff;
+      --primary-soft: #171717;
+      --accent: #00e5ff;
+      --success: #51ff7a;
+      --danger: #ff5c5c;
+      --warning: #fff36b;
+      --display-bg: #000000;
+      --display-text: #ffffff;
+      --highlight-bg: #fff36b;
+      --highlight-text: #000000;
+      --focus-bar-bg: rgba(0, 0, 0, 0.94);
+      --guide-line: #fff36b;
+      --line-dot: #00e5ff;
+      --shadow: 0 0 0 3px #fff36b;
+      --word-0: #ff7a7a;
+      --word-1: #76d7ff;
+      --word-2: #7dff9a;
+      --word-3: #e4a8ff;
+      --word-4: #ffe066;
+      --word-5: #8affff;
+      --word-6: #ff9ad5;
+      --word-7: #ffffff;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, var(--page-bg) 0%, var(--page-accent) 100%);
+      padding: 18px;
+      transition: background 180ms ease, color 180ms ease;
+      overflow-x: hidden;
+      color-scheme: light;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      min-width: 0;
+      max-width: 1260px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-raised);
+    }
+
+    .topbar,
+    .main,
+    .panel {
+      min-width: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand > div:last-child {
+      min-width: 0;
+    }
+
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      color: var(--highlight-text);
+      background: var(--highlight-bg);
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .theme-picker,
+    .compact-picker {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 8px;
+      background: var(--surface-soft);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .theme-picker span,
+    .compact-picker span {
+      color: var(--muted);
+      font-size: 0.77rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .theme-picker select,
+    .compact-picker select {
+      min-width: 0;
+      height: 36px;
+      border: 0;
+      outline: 0;
+      border-radius: 6px;
+      background: var(--surface-soft);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    select option,
+    select optgroup {
+      background-color: var(--surface);
+      color: var(--text);
+    }
+
+    .btn {
+      min-width: 0;
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 0 12px;
+      color: #ffffff;
+      background: var(--primary);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(20, 32, 51, 0.12);
+    }
+
+    .btn.secondary {
+      background: var(--surface-soft);
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .btn.success {
+      background: var(--success);
+    }
+
+    .btn[aria-pressed="true"] {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: transparent;
+    }
+
+    body[data-theme="contrast"] .btn {
+      color: #000000;
+    }
+
+    body[data-theme="contrast"] .btn.secondary {
+      color: var(--text);
+    }
+
+    .focus-head {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--focus-bar-bg);
+      backdrop-filter: blur(12px);
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      grid-template-areas:
+        "stats controls"
+        "editor controls"
+        "board board";
+      gap: 14px;
+      padding: 14px;
+      background: var(--surface-soft);
+      background: color-mix(in srgb, var(--surface-soft) 68%, var(--surface));
+    }
+
+    .stats-strip {
+      grid-area: stats;
+      display: grid;
+      grid-template-columns: minmax(160px, 1fr) repeat(3, auto);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .progress-wrap {
+      position: relative;
+      height: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 180ms ease;
+    }
+
+    .milestone-dots {
+      position: absolute;
+      inset: 0 5px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .milestone-dots span {
+      width: 8px;
+      height: 8px;
+      align-self: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--surface-raised);
+    }
+
+    .stat-pill {
+      min-width: 0;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .editor-panel {
+      grid-area: editor;
+    }
+
+    .controls-panel {
+      grid-area: controls;
+      align-self: start;
+    }
+
+    .board-panel {
+      grid-area: board;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-raised);
+    }
+
+    .panel-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .panel-title strong {
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      padding: 9px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .tool,
+    .icon-btn {
+      min-width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 0 9px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .tool:hover,
+    .icon-btn:hover,
+    .tool:focus-visible,
+    .icon-btn:focus-visible {
+      outline: 0;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(40, 87, 184, 0.18);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+    }
+
+    .tool.active {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+    }
+
+    .tool select,
+    select.tool {
+      min-width: 128px;
+      cursor: pointer;
+    }
+
+    .hidden-file {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .divider {
+      width: 1px;
+      height: 26px;
+      background: var(--line);
+      margin: 0 2px;
+    }
+
+    #editor {
+      min-height: 230px;
+      max-height: 420px;
+      overflow: auto;
+      padding: 20px;
+      background: var(--surface);
+      color: var(--text);
+      font-family: Atkinson Hyperlegible, Inter, Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.55;
+      outline: 0;
+    }
+
+    #editor:empty::before {
+      content: attr(data-placeholder);
+      color: var(--muted);
+    }
+
+    #editor p,
+    #display p {
+      margin: 0 0 0.75em;
+    }
+
+    #editor h1,
+    #editor h2,
+    #editor h3,
+    #editor h4,
+    #display h1,
+    #display h2,
+    #display h3,
+    #display h4 {
+      margin: 0.34em 0 0.22em;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    #editor h1,
+    #display h1 {
+      font-size: 1.8em;
+      font-weight: 800;
+    }
+
+    #editor h2,
+    #display h2 {
+      font-size: 1.45em;
+      font-weight: 800;
+    }
+
+    #editor h3,
+    #display h3 {
+      font-size: 1.2em;
+      font-weight: 800;
+    }
+
+    #editor h4,
+    #display h4 {
+      font-size: 1.05em;
+      font-weight: 800;
+    }
+
+    #editor blockquote,
+    #display blockquote {
+      margin: 0.45em 0;
+      padding-left: 0.8em;
+      border-left: 4px solid var(--primary);
+      color: inherit;
+    }
+
+    #editor pre,
+    #display pre {
+      white-space: pre-wrap;
+      margin: 0.5em 0;
+      padding: 0.55em 0.7em;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--surface-soft);
+      font-size: 0.8em;
+    }
+
+    #editor code,
+    #display code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.86em;
+    }
+
+    #editor ul,
+    #editor ol,
+    #display ul,
+    #display ol {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+      padding-left: 1.45em;
+    }
+
+    #editor li,
+    #display li {
+      margin: 0.16em 0;
+    }
+
+    #display p,
+    #display li {
+      font-weight: 400;
+    }
+
+    #display strong,
+    #display b {
+      font-weight: 700;
+    }
+
+    #display li::marker {
+      color: var(--display-text);
+      font-weight: 400;
+    }
+
+    .controls-body {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field label,
+    .switch span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .range,
+    .select {
+      min-width: 0;
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 800;
+      outline: 0;
+    }
+
+    .range {
+      padding: 0;
+      accent-color: var(--primary);
+    }
+
+    .switch {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--surface-soft);
+      cursor: pointer;
+    }
+
+    .switch input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .board-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .mini-pill {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 0 8px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .writing-area {
+      position: relative;
+      height: 380px;
+      overflow: auto;
+      padding: 26px;
+      border-top: 1px solid var(--line);
+      background: var(--display-bg);
+    }
+
+    .guide-layer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .guide-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 0;
+      border-top: 2px solid var(--guide-line);
+      opacity: 0.72;
+    }
+
+    #display {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      color: var(--display-text);
+      font-family: Atkinson Hyperlegible, Inter, Arial, sans-serif;
+      font-size: 34px;
+      line-height: 1.65;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    .empty-display {
+      color: var(--muted);
+      font-size: 0.85em;
+      font-weight: 700;
+    }
+
+    .word-token {
+      border-radius: 7px;
+      transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .word-color .word-token:not(.current-word) {
+      color: var(--word-color);
+      font-weight: inherit;
+    }
+
+    #display .blank-line-anchor {
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      color: transparent;
+      opacity: 0;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .color-0 { --word-color: var(--word-0); }
+    .color-1 { --word-color: var(--word-1); }
+    .color-2 { --word-color: var(--word-2); }
+    .color-3 { --word-color: var(--word-3); }
+    .color-4 { --word-color: var(--word-4); }
+    .color-5 { --word-color: var(--word-5); }
+    .color-6 { --word-color: var(--word-6); }
+    .color-7 { --word-color: var(--word-7); }
+
+    .current-word {
+      background: var(--highlight-bg) !important;
+      color: var(--highlight-text) !important;
+      box-shadow: 0 0 0 4px rgba(31, 79, 178, 0.2);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--highlight-bg) 23%, transparent);
+      padding: 0.02em 0.24em;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    body[data-highlight="underline"] .current-word {
+      background: transparent !important;
+      color: var(--display-text) !important;
+      box-shadow: inset 0 -0.18em 0 var(--highlight-bg);
+      border-radius: 0;
+      padding: 0 0.08em;
+    }
+
+    body[data-highlight="box"] .current-word {
+      background: transparent !important;
+      color: var(--display-text) !important;
+      box-shadow: 0 0 0 3px var(--highlight-bg);
+      padding: 0.01em 0.22em;
+    }
+
+    .play-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-raised);
+    }
+
+    .round {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 46px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      overflow: hidden;
+    }
+
+    .round.primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: transparent;
+      font-size: 1.2rem;
+    }
+
+    body[data-theme="contrast"] .round.primary {
+      color: #000000;
+    }
+
+    .round.exit-focus {
+      width: auto;
+      flex-basis: auto;
+      min-width: 76px;
+      border-radius: 999px;
+      padding: 0 14px;
+      font-size: 1rem;
+    }
+
+    .reward {
+      position: fixed;
+      left: 50%;
+      top: 18%;
+      z-index: 9999;
+      width: min(420px, calc(100vw - 32px));
+      transform: translate(-50%, -18px) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      border: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 22px 26px;
+      text-align: center;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.22);
+    }
+
+    .reward.show {
+      animation: reward-pop 2.1s ease;
+    }
+
+    .reward-mark {
+      display: inline-grid;
+      place-items: center;
+      min-width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: var(--highlight-bg);
+      color: var(--highlight-text);
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .reward h2 {
+      margin: 12px 0 5px;
+      font-size: 1.35rem;
+    }
+
+    .reward p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    @keyframes reward-pop {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -18px) scale(0.9);
+      }
+      14%, 76% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -10px) scale(0.96);
+      }
+    }
+
+    body.focus {
+      padding: 0;
+      overflow: hidden;
+      background: var(--display-bg);
+    }
+
+    body.focus .app {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      max-width: none;
+      border: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--display-bg);
+      box-shadow: none;
+    }
+
+    body.focus .topbar,
+    body.focus .stats-strip,
+    body.focus .editor-panel,
+    body.focus .controls-panel,
+    body.focus .board-panel > .panel-head {
+      display: none;
+    }
+
+    body.focus .focus-head {
+      display: flex;
+    }
+
+    body.focus .main {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      padding: 0;
+      background: var(--display-bg);
+    }
+
+    body.focus .board-panel {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 0;
+      border-radius: 0;
+      background: var(--display-bg);
+    }
+
+    body.focus .writing-area {
+      flex: 1;
+      height: auto;
+      min-height: 0;
+      border: 0;
+      padding: 5vh 6vw 110px;
+      background-color: var(--display-bg);
+    }
+
+    body.focus #display {
+      max-width: 1500px;
+      margin: 0 auto;
+      font-size: clamp(44px, 5.6vw, 88px);
+      line-height: 1.55;
+    }
+
+    body.focus .play-row {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      z-index: 5100;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 24px);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: var(--focus-bar-bg);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.16);
+      backdrop-filter: blur(12px);
+    }
+
+    .focus-progress {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .focus-label,
+    .focus-speed {
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .focus-speed {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .main {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "stats"
+          "controls"
+          "editor"
+          "board";
+      }
+
+      .controls-panel {
+        align-self: stretch;
+      }
+
+      .controls-body {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 8px;
+      }
+
+      .brand {
+        align-items: flex-start;
+      }
+
+      .brand h1 {
+        font-size: 1rem;
+      }
+
+      .brand p {
+        font-size: 0.78rem;
+      }
+
+      .top-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: stretch;
+        width: 100%;
+      }
+
+      .theme-picker {
+        grid-column: 1 / -1;
+      }
+
+      .toolbar,
+      .play-row {
+        align-items: stretch;
+      }
+
+      .btn,
+      .theme-picker,
+      .compact-picker {
+        width: 100%;
+      }
+
+      .theme-picker select,
+      .compact-picker select {
+        width: 100%;
+      }
+
+      .stats-strip {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-strip .progress-wrap {
+        grid-column: 1 / -1;
+      }
+
+      .stat-pill {
+        white-space: normal;
+        text-align: center;
+      }
+
+      .controls-body,
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .field label {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .board-meta {
+        justify-content: flex-start;
+      }
+
+      #editor {
+        min-height: 210px;
+      }
+
+      .writing-area {
+        height: 320px;
+        padding: 18px;
+      }
+
+      #display {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .topbar,
+      .main {
+        padding: 10px;
+      }
+
+      .top-actions,
+      .stats-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .theme-picker,
+      .compact-picker,
+      .btn,
+      .stat-pill {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+
+      .topbar,
+      .focus-head,
+      .stats-strip,
+      .editor-panel,
+      .controls-panel,
+      .play-row {
+        display: none !important;
+      }
+
+      .app,
+      .board-panel,
+      .writing-area {
+        border: 0;
+        box-shadow: none;
+      }
+
+      .main {
+        display: block;
+        padding: 0;
+        background: #ffffff;
+      }
+    }
   </style>
 </head>
-<body>
+<body data-theme="paper">
   <div class="app" id="app">
-    <header>
-      <div class="brand"><div class="logo">✍️</div><div class="title"><h1>Writing Assistant Pro</h1><p>Paste, format, play, and reward progress on the whiteboard.</p></div></div>
-      <div class="top-actions"><button class="btn secondary" onclick="cycleTheme()">Theme</button><button class="btn secondary" onclick="toggleWordColors()">Word Colors</button><button class="btn success" onclick="startPractice()">Start Writing</button><button class="btn" onclick="enterFocusMode()">Focus Mode</button></div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">WA</div>
+        <div>
+          <h1>Writing Assistant Studio</h1>
+          <p>Board-friendly writing practice for grades 2 to 10.</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <label class="theme-picker" for="theme-select">
+          <span>Theme</span>
+          <select id="theme-select" onchange="setTheme(this.value)">
+            <option value="paper">Paper</option>
+            <option value="chalk">Chalkboard</option>
+            <option value="sunshine">Sunshine</option>
+            <option value="midnight">Midnight</option>
+            <option value="contrast">High Contrast</option>
+          </select>
+        </label>
+        <button class="btn secondary" id="word-color-btn" type="button" onclick="toggleWordColors()" aria-pressed="false">Color Words</button>
+        <button class="btn secondary" type="button" onclick="printBoard()">Print</button>
+        <button class="btn success" type="button" onclick="startPractice()">Start</button>
+        <button class="btn" id="top-focus-btn" type="button" onclick="toggleFocusMode()">Focus</button>
+      </div>
     </header>
 
     <div class="focus-head">
-      <div class="focus-progress"><div class="progress-wrap"><div class="progress-fill" id="focus-fill"></div><div class="milestone-dots"><span></span><span></span><span></span><span></span><span></span></div></div></div>
-      <div class="focus-label" id="focus-percent">0%</div><div class="focus-mini" id="focus-speed">20 WPM</div><button class="focus-exit" onclick="exitFocusMode()">Exit</button>
+      <div class="focus-progress">
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress-fill" id="focus-fill"></div>
+          <div class="milestone-dots"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="focus-label" id="focus-percent">0%</div>
+      <div class="focus-speed" id="focus-speed">20 WPM</div>
+      <button class="btn secondary" type="button" onclick="exitFocusMode()">Exit</button>
     </div>
 
-    <main class="content">
-      <section class="compact-stats">
-        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div><div class="milestone-dots"><span></span><span></span><span></span><span></span><span></span></div></div>
-        <div class="pill" id="progress-text">0% complete</div><div class="pill" id="time-text">0 min</div>
-      </section>
-
-      <section class="editor-card">
-        <div class="toolbar" aria-label="Editor formatting toolbar">
-          <button class="tool" onclick="formatDoc('bold')"><b>B</b></button><button class="tool" onclick="formatDoc('italic')"><i>I</i></button><button class="tool" onclick="formatDoc('underline')"><u>U</u></button><span class="divider"></span>
-          <button class="tool" onclick="formatDoc('insertUnorderedList')">• List</button><button class="tool" onclick="formatDoc('insertOrderedList')">1. List</button><span class="divider"></span>
-          <button class="tool" onclick="changeEditorFontSize(-2)">A−</button><button class="tool" onclick="changeEditorFontSize(2)">A+</button>
-          <select class="tool" id="editor-font" onchange="setEditorFont(this.value)"><option value="Inter">Inter</option><option value="Open Sans">Open Sans</option><option value="Atkinson Hyperlegible">Atkinson</option><option value="Comic Neue">Comic Neue</option><option value="Georgia">Georgia</option><option value="Arial">Arial</option></select>
-          <button class="tool" onclick="clearEditor()">Clear</button>
+    <main class="main">
+      <section class="stats-strip" aria-label="Writing progress">
+        <div class="progress-wrap">
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="milestone-dots"><span></span><span></span><span></span><span></span><span></span></div>
         </div>
-        <div id="editor" contenteditable="true" data-placeholder="Paste or type the students’ writing text here. Formatting, bold, italic, underline, and lists will be preserved during playback."></div>
+        <div class="stat-pill" id="progress-text">0% complete</div>
+        <div class="stat-pill" id="position-text">0 / 0 words</div>
+        <div class="stat-pill" id="time-text">0 min left</div>
       </section>
 
-      <section class="controls-grid">
-        <div class="field"><label for="speed">Speed: <span id="speed-value">20 WPM</span></label><input class="range" id="speed" type="range" min="5" max="120" value="20" oninput="updateSpeed()"></div>
-        <div class="field"><label for="display-font-size">Display Font Size</label><input class="range" id="display-font-size" type="range" min="24" max="72" value="34" oninput="updateDisplayStyle()"></div>
-        <div class="field"><label for="display-font">Display Font</label><select class="select" id="display-font" onchange="updateDisplayStyle()"><option value="Atkinson Hyperlegible">Atkinson</option><option value="Inter">Inter</option><option value="Open Sans">Open Sans</option><option value="Comic Neue">Comic Neue</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option></select></div>
-        <div class="field"><label for="reward-style">Reward Style</label><select class="select" id="reward-style"><option value="stars">Stars</option><option value="badges">Badges</option><option value="simple">Simple</option></select></div>
+      <section class="panel editor-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <strong>Lesson Text</strong>
+            <span id="save-status">Ready</span>
+          </div>
+          <label class="compact-picker" for="sample-select">
+            <span>Sample</span>
+            <select id="sample-select" onchange="loadSample(this.value)">
+              <option value="">Choose text</option>
+              <option value="primary">Primary</option>
+              <option value="middle">Middle school</option>
+              <option value="exam">Exam notes</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="toolbar" aria-label="Editor formatting toolbar">
+          <button class="tool" type="button" onclick="formatDoc('bold')" title="Bold"><b>B</b></button>
+          <button class="tool" type="button" onclick="formatDoc('italic')" title="Italic"><i>I</i></button>
+          <button class="tool" type="button" onclick="formatDoc('underline')" title="Underline"><u>U</u></button>
+          <span class="divider" aria-hidden="true"></span>
+          <select class="tool" id="block-style" onchange="applyBlockStyle(this.value)" title="Text style">
+            <option value="">Style</option>
+            <option value="h1">Chapter heading</option>
+            <option value="h2">Heading</option>
+            <option value="h3">Subheading</option>
+            <option value="p">Body text</option>
+            <option value="blockquote">Quote / note</option>
+          </select>
+          <select class="tool" id="inline-size" onchange="applyInlineSize(this.value)" title="Selected text size">
+            <option value="">Size</option>
+            <option value="0.85em">Small</option>
+            <option value="1em">Normal</option>
+            <option value="1.18em">Large</option>
+            <option value="1.38em">Huge</option>
+          </select>
+          <span class="divider" aria-hidden="true"></span>
+          <button class="tool" type="button" onclick="formatDoc('justifyLeft')" title="Align left">Left</button>
+          <button class="tool" type="button" onclick="formatDoc('justifyCenter')" title="Center align">Center</button>
+          <button class="tool" type="button" onclick="formatDoc('justifyRight')" title="Align right">Right</button>
+          <span class="divider" aria-hidden="true"></span>
+          <button class="tool" type="button" onclick="formatDoc('insertUnorderedList')" title="Bullet list">List</button>
+          <button class="tool" type="button" onclick="formatDoc('insertOrderedList')" title="Numbered list">1. List</button>
+          <button class="tool" type="button" onclick="formatDoc('removeFormat')" title="Remove formatting">Clean</button>
+          <span class="divider" aria-hidden="true"></span>
+          <button class="tool" type="button" onclick="changeEditorFontSize(-2)" title="Smaller editor text">A-</button>
+          <button class="tool" type="button" onclick="changeEditorFontSize(2)" title="Larger editor text">A+</button>
+          <select class="tool" id="editor-font" onchange="setEditorFont(this.value)" title="Editor font">
+            <option value="Atkinson Hyperlegible">Atkinson</option>
+            <option value="Inter">Inter</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Comic Neue">Comic Neue</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Arial">Arial</option>
+          </select>
+          <button class="tool" type="button" onclick="clearEditor()" title="Clear editor">Clear</button>
+        </div>
+
+        <div id="editor" contenteditable="true" spellcheck="true" data-placeholder="Paste rich text from ChatGPT, email, docs, or type the board text here. Headings, alignment, lists, and line breaks will be preserved."></div>
       </section>
 
-      <section class="practice-card">
-        <div class="toolbar"><strong>Preview / Playback</strong><span style="color:var(--muted);font-weight:700">Formatting is preserved here.</span></div>
-        <div class="writing-area" id="writing-area"><div id="display"></div></div>
-        <div class="play-row">
-          <button class="round light" onclick="previousWord()" title="Previous word">←</button><button class="round" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button><button class="round light" onclick="nextWord()" title="Next word">→</button>
-          <button class="round light" onclick="previousLine()" title="Previous line">↰</button><button class="round light" onclick="nextLine()" title="Next line">↱</button><button class="round light" onclick="resetPractice()" title="Reset">↻</button><button class="round light" onclick="enterFocusMode()" title="Focus mode">⛶</button>
+      <aside class="panel controls-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <strong>Board Controls</strong>
+            <span>Adjust pace, display, and rewards.</span>
+          </div>
+        </div>
+
+        <div class="controls-body">
+          <div class="field">
+            <label for="speed">Speed <strong id="speed-value">20 WPM</strong></label>
+            <input class="range" id="speed" type="range" min="5" max="140" value="20" oninput="updateSpeed()">
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="display-font-size">Text Size <strong id="size-value">34</strong></label>
+              <input class="range" id="display-font-size" type="range" min="24" max="88" value="34" oninput="updateDisplayStyle()">
+            </div>
+            <div class="field">
+              <label for="line-height">Line Space <strong id="line-height-value">1.65</strong></label>
+              <input class="range" id="line-height" type="range" min="1.2" max="2.2" step="0.05" value="1.65" oninput="updateDisplayStyle()">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="letter-spacing">Letter Space <strong id="letter-spacing-value">0 px</strong></label>
+              <input class="range" id="letter-spacing" type="range" min="0" max="4" step="0.5" value="0" oninput="updateDisplayStyle()">
+            </div>
+            <div class="field">
+              <label for="display-font">Display Font</label>
+              <select class="select" id="display-font" onchange="updateDisplayStyle()">
+                <option value="Atkinson Hyperlegible">Atkinson</option>
+                <option value="Inter">Inter</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Comic Neue">Comic Neue</option>
+                <option value="Arial">Arial</option>
+                <option value="Georgia">Georgia</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="reward-style">Rewards</label>
+              <select class="select" id="reward-style" onchange="saveState()">
+                <option value="encourage">Encouraging</option>
+                <option value="simple">Simple</option>
+                <option value="exam">Exam focus</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="highlight-style">Highlight</label>
+              <select class="select" id="highlight-style" onchange="setHighlightStyle(this.value)">
+                <option value="solid">Solid</option>
+                <option value="underline">Underline</option>
+                <option value="box">Box</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="switch" for="guide-lines">
+            <span>Guide Lines</span>
+            <input id="guide-lines" type="checkbox" onchange="updateDisplayStyle()">
+          </label>
+        </div>
+      </aside>
+
+      <section class="panel board-panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <strong>Preview / Board</strong>
+            <span id="board-note">Formatting is preserved and projector contrast is protected.</span>
+          </div>
+          <div class="board-meta">
+            <span class="mini-pill" id="theme-label">Paper theme</span>
+            <span class="mini-pill" id="word-count-label">0 words</span>
+          </div>
+        </div>
+
+        <div class="writing-area" id="writing-area">
+          <div class="guide-layer" id="guide-layer" aria-hidden="true"></div>
+          <div id="display"></div>
+        </div>
+
+        <div class="play-row" aria-label="Playback controls">
+          <button class="round" type="button" onclick="previousWord()" title="Previous word" aria-label="Previous word">&larr;</button>
+          <button class="round primary" id="play-btn" type="button" onclick="togglePlay()" title="Play or pause" aria-label="Play or pause">&gt;</button>
+          <button class="round" type="button" onclick="nextWord()" title="Next word" aria-label="Next word">&rarr;</button>
+          <button class="round" type="button" onclick="previousLine()" title="Previous line" aria-label="Previous line">&uarr;</button>
+          <button class="round" type="button" onclick="nextLine()" title="Next line" aria-label="Next line">&darr;</button>
+          <button class="round" type="button" onclick="resetPractice()" title="Reset" aria-label="Reset">R</button>
+          <button class="round exit-focus" id="focus-toggle-btn" type="button" onclick="toggleFocusMode()" title="Enter or exit focus mode">Focus</button>
         </div>
       </section>
     </main>
   </div>
-  <div class="reward" id="reward"><div class="big" id="reward-icon">⭐</div><h2 id="reward-title">25% completed!</h2><p id="reward-msg">Great start. Keep going!</p></div>
 
-<script>
-  let tokens=[], currentIndex=0, intervalId=null, isPlaying=false, editorFontSize=24, theme=0, wordColors=false;
-  const milestones=[25,50,75,90,100]; const hitMilestones=new Set();
-  const messages={25:['⭐','25% completed!','Great start. The page is moving!'],50:['🏅','Halfway done!','Excellent focus. Keep your handwriting neat.'],75:['🚀','75% completed!','Only a little more to go. Stay steady.'],90:['🔥','90% completed!','Final stretch. Finish strong!'],100:['🎉','100% completed!','Wonderful work. You completed the writing task!']};
+  <div class="reward" id="reward" aria-live="polite">
+    <div class="reward-mark" id="reward-mark">25%</div>
+    <h2 id="reward-title">25% complete</h2>
+    <p id="reward-msg">Great start. Keep going.</p>
+  </div>
 
-  function formatDoc(cmd){document.execCommand(cmd,false,null); document.getElementById('editor').focus();}
-  function setEditorFont(font){document.getElementById('editor').style.fontFamily=font;}
-  function changeEditorFontSize(delta){editorFontSize=Math.max(18,Math.min(42,editorFontSize+delta));document.getElementById('editor').style.fontSize=editorFontSize+'px';}
-  function clearEditor(){document.getElementById('editor').innerHTML=''; resetPractice();}
-  function cycleTheme(){theme=(theme+1)%3; document.body.classList.remove('dark','contrast'); if(theme===1)document.body.classList.add('dark'); if(theme===2)document.body.classList.add('contrast');}
-  function toggleWordColors(){wordColors=!wordColors; document.getElementById('display').classList.toggle('word-color',wordColors);}
+  <script>
+    const storageKey = "writingAssistantStudio.v2";
+    const milestones = [25, 50, 75, 90, 100];
+    const samples = {
+      primary: "<ol><li><b>Good handwriting</b> is easy to read.</li><li>Leave clear spaces between words.</li><li><u>Check every sentence</u> before you finish.</li></ol>",
+      middle: "<p><b>Water conservation</b> means using water wisely and avoiding waste.</p><ul><li>Close taps after use.</li><li>Collect rainwater where possible.</li><li>Reuse safe water for plants.</li></ul><p>Small daily habits can protect a valuable resource.</p>",
+      exam: "<p><b>Answer structure:</b></p><ol><li>Read the question carefully.</li><li>Underline the key terms.</li><li>Write in clear points with examples.</li><li>Revise spelling, grammar, and punctuation.</li></ol>"
+    };
+    const rewardMessages = {
+      encourage: {
+        25: ["25%", "25% complete", "Great start. Keep the letters clear."],
+        50: ["50%", "Halfway done", "Steady work. Keep the spacing even."],
+        75: ["75%", "Almost there", "Stay focused. The finish line is close."],
+        90: ["90%", "Final stretch", "Careful writing now makes the page shine."],
+        100: ["100%", "Task complete", "Excellent work. You completed the writing task."]
+      },
+      simple: {
+        25: ["25%", "25% complete", "Continue."],
+        50: ["50%", "50% complete", "Continue."],
+        75: ["75%", "75% complete", "Continue."],
+        90: ["90%", "90% complete", "Finish carefully."],
+        100: ["100%", "Complete", "Done."]
+      },
+      exam: {
+        25: ["25%", "Opening done", "Keep the answer organized."],
+        50: ["50%", "Main body in progress", "Add clear points and examples."],
+        75: ["75%", "Most points done", "Check sequence and clarity."],
+        90: ["90%", "Review stage", "Watch spelling and punctuation."],
+        100: ["100%", "Ready to submit", "Final answer completed."]
+      }
+    };
+    const themeNames = {
+      paper: "Paper",
+      chalk: "Chalkboard",
+      sunshine: "Sunshine",
+      midnight: "Midnight",
+      contrast: "High Contrast"
+    };
+    const fontStacks = {
+      "Atkinson Hyperlegible": '"Atkinson Hyperlegible", Inter, Arial, sans-serif',
+      "Inter": 'Inter, Arial, sans-serif',
+      "Open Sans": '"Open Sans", Inter, Arial, sans-serif',
+      "Comic Neue": '"Comic Neue", "Comic Sans MS", Arial, sans-serif',
+      "Georgia": 'Georgia, "Times New Roman", serif',
+      "Arial": 'Arial, Helvetica, sans-serif'
+    };
 
-  function sanitizeEditorClone(){
-    const clone=document.getElementById('editor').cloneNode(true);
-    clone.querySelectorAll('script,style,iframe,object,embed').forEach(n=>n.remove());
-    clone.querySelectorAll('*').forEach(el=>{[...el.attributes].forEach(a=>{if(/^on/i.test(a.name))el.removeAttribute(a.name)});});
-    return clone;
-  }
-  function prepareTokens(){
-    const clone=sanitizeEditorClone(); tokens=[]; let idx=0;
-    const walker=document.createTreeWalker(clone,NodeFilter.SHOW_TEXT,{acceptNode(n){return /\S/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
-    const textNodes=[]; while(walker.nextNode()) textNodes.push(walker.currentNode);
-    textNodes.forEach(node=>{
-      const frag=document.createDocumentFragment(); const parts=node.nodeValue.match(/\S+|\s+/g)||[];
-      parts.forEach(part=>{
-        if(/\S/.test(part)){const span=document.createElement('span');span.className='word-token';span.dataset.index=idx++;span.textContent=part;frag.appendChild(span);tokens.push(span.dataset.index);} else frag.appendChild(document.createTextNode(part));
-      }); node.parentNode.replaceChild(frag,node);
+    let tokens = [];
+    let currentIndex = 0;
+    let intervalId = null;
+    let isPlaying = false;
+    let editorFontSize = 24;
+    let writingFont = "Atkinson Hyperlegible";
+    let wordColors = false;
+    let hitMilestones = new Set();
+    let saveTimer = null;
+    let guideRenderId = null;
+    let guideRenderTimer = null;
+
+    const $ = id => document.getElementById(id);
+
+    function formatDoc(command) {
+      document.execCommand(command, false, null);
+      $("editor").focus();
+      scheduleSave();
+      prepareTokens();
+      scheduleGuideRender();
+    }
+
+    function applyBlockStyle(tag) {
+      if (!tag) return;
+      $("editor").focus();
+      document.execCommand("formatBlock", false, tag);
+      $("block-style").value = "";
+      scheduleSave();
+      prepareTokens();
+    }
+
+    function applyInlineSize(size) {
+      if (!size) return;
+      const editor = $("editor");
+      editor.focus();
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount) {
+        $("inline-size").value = "";
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      if (!editor.contains(range.commonAncestorContainer)) {
+        $("inline-size").value = "";
+        return;
+      }
+
+      const span = document.createElement("span");
+      span.style.fontSize = size;
+      if (range.collapsed) {
+        span.appendChild(document.createTextNode("\u200b"));
+        range.insertNode(span);
+        range.setStart(span.firstChild, 1);
+        range.collapse(true);
+      } else {
+        span.appendChild(range.extractContents());
+        range.insertNode(span);
+        range.selectNodeContents(span);
+      }
+      selection.removeAllRanges();
+      selection.addRange(range);
+      $("inline-size").value = "";
+      scheduleSave();
+      prepareTokens();
+    }
+
+    function fontStack(font) {
+      return fontStacks[font] || fontStacks["Atkinson Hyperlegible"];
+    }
+
+    function setSelectValue(id, value) {
+      const select = $(id);
+      if ([...select.options].some(option => option.value === value)) select.value = value;
+    }
+
+    function stripInlineFontFamilies(root) {
+      root.querySelectorAll("[style]").forEach(element => {
+        element.style.removeProperty("font-family");
+        if (!element.getAttribute("style")) element.removeAttribute("style");
+      });
+    }
+
+    function applyWritingFont(font, options = {}) {
+      const nextFont = fontStacks[font] ? font : "Atkinson Hyperlegible";
+      const changed = writingFont !== nextFont;
+      writingFont = nextFont;
+      setSelectValue("editor-font", nextFont);
+      setSelectValue("display-font", nextFont);
+      $("editor").style.fontFamily = fontStack(nextFont);
+      $("display").style.fontFamily = fontStack(nextFont);
+      stripInlineFontFamilies($("editor"));
+
+      if (options.rebuild && changed) prepareTokens();
+      else scheduleGuideRender();
+
+      if (options.save) scheduleSave("Font updated");
+    }
+
+    function setEditorFont(font) {
+      applyWritingFont(font, { rebuild: true, save: true });
+    }
+
+    function changeEditorFontSize(delta) {
+      editorFontSize = Math.max(18, Math.min(44, editorFontSize + delta));
+      $("editor").style.fontSize = editorFontSize + "px";
+      scheduleSave();
+    }
+
+    function clearEditor() {
+      stopPlayback();
+      $("editor").innerHTML = "";
+      currentIndex = 0;
+      hitMilestones.clear();
+      prepareTokens();
+      updateProgress();
+      scheduleSave("Cleared");
+      $("editor").focus();
+    }
+
+    function loadSample(name) {
+      if (!name || !samples[name]) return;
+      stopPlayback();
+      $("editor").innerHTML = samples[name];
+      $("sample-select").value = "";
+      currentIndex = 0;
+      hitMilestones.clear();
+      prepareTokens();
+      updateProgress();
+      scheduleSave("Sample loaded");
+    }
+
+    function setTheme(theme) {
+      const nextTheme = themeNames[theme] ? theme : "paper";
+      document.body.dataset.theme = nextTheme;
+      $("theme-select").value = nextTheme;
+      $("theme-label").textContent = themeNames[nextTheme] + " theme";
+      scheduleGuideRender();
+      saveState();
+    }
+
+    function toggleWordColors() {
+      wordColors = !wordColors;
+      syncWordColorState();
+      saveState();
+    }
+
+    function syncWordColorState() {
+      $("display").classList.toggle("word-color", wordColors);
+      $("word-color-btn").setAttribute("aria-pressed", String(wordColors));
+      $("word-color-btn").textContent = wordColors ? "Colors On" : "Color Words";
+    }
+
+    function setHighlightStyle(style) {
+      document.body.dataset.highlight = style;
+      scheduleGuideRender();
+      saveState();
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function parseInlineMarkdown(text) {
+      const codeSpans = [];
+      let source = text.replace(/`([^`]+)`/g, (_, code) => {
+        const token = "%%CODE" + codeSpans.length + "%%";
+        codeSpans.push("<code>" + escapeHtml(code) + "</code>");
+        return token;
+      });
+
+      let html = escapeHtml(source);
+      html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      html = html.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+      html = html.replace(/\*([^*\n]+)\*/g, "<em>$1</em>");
+      html = html.replace(/_([^_\n]+)_/g, "<em>$1</em>");
+      html = html.replace(/~~([^~]+)~~/g, "<s>$1</s>");
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<u>$1</u>");
+      codeSpans.forEach((code, index) => {
+        html = html.replace("%%CODE" + index + "%%", code);
+      });
+      return html;
+    }
+
+    function flushMarkdownParagraph(parts, output) {
+      if (!parts.length) return;
+      output.push("<p>" + parts.map(parseInlineMarkdown).join("<br>") + "</p>");
+      parts.length = 0;
+    }
+
+    function flushMarkdownList(list, output) {
+      if (!list.type) return;
+      output.push("<" + list.type + ">" + list.items.map(item => "<li>" + parseInlineMarkdown(item) + "</li>").join("") + "</" + list.type + ">");
+      list.type = "";
+      list.items = [];
+    }
+
+    function normalizeMarkdownSource(markdown) {
+      return markdown
+        .replace(/\s+(#{1,6}\s+\S)/g, "\n\n$1")
+        .replace(/\s+((?:[-*+])\s+\S)/g, "\n$1")
+        .replace(/\s+(\d+[.)]\s+\S)/g, "\n$1");
+    }
+
+    function markdownToHtml(markdown) {
+      const lines = normalizeMarkdownSource(markdown).replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").split("\n");
+      const output = [];
+      const paragraph = [];
+      const list = { type: "", items: [] };
+      let inCodeFence = false;
+      let codeFence = [];
+
+      lines.forEach(rawLine => {
+        const line = rawLine.replace(/\s+$/, "");
+
+        if (/^```/.test(line.trim())) {
+          if (inCodeFence) {
+            output.push("<pre><code>" + escapeHtml(codeFence.join("\n")) + "</code></pre>");
+            codeFence = [];
+            inCodeFence = false;
+          } else {
+            flushMarkdownParagraph(paragraph, output);
+            flushMarkdownList(list, output);
+            inCodeFence = true;
+          }
+          return;
+        }
+
+        if (inCodeFence) {
+          codeFence.push(rawLine);
+          return;
+        }
+
+        if (!line.trim()) {
+          flushMarkdownParagraph(paragraph, output);
+          flushMarkdownList(list, output);
+          return;
+        }
+
+        const heading = line.match(/^(#{1,6})\s+(.+)$/);
+        if (heading) {
+          flushMarkdownParagraph(paragraph, output);
+          flushMarkdownList(list, output);
+          const level = Math.min(4, heading[1].length);
+          output.push("<h" + level + ">" + parseInlineMarkdown(heading[2].trim()) + "</h" + level + ">");
+          return;
+        }
+
+        if (/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+          flushMarkdownParagraph(paragraph, output);
+          flushMarkdownList(list, output);
+          output.push("<hr>");
+          return;
+        }
+
+        const quote = line.match(/^>\s?(.*)$/);
+        if (quote) {
+          flushMarkdownParagraph(paragraph, output);
+          flushMarkdownList(list, output);
+          output.push("<blockquote>" + parseInlineMarkdown(quote[1]) + "</blockquote>");
+          return;
+        }
+
+        const unordered = line.match(/^\s*[-*+]\s+(.+)$/);
+        const ordered = line.match(/^\s*\d+[.)]\s+(.+)$/);
+        if (unordered || ordered) {
+          flushMarkdownParagraph(paragraph, output);
+          const type = unordered ? "ul" : "ol";
+          if (list.type && list.type !== type) flushMarkdownList(list, output);
+          list.type = type;
+          list.items.push((unordered || ordered)[1]);
+          return;
+        }
+
+        flushMarkdownList(list, output);
+        paragraph.push(line);
+      });
+
+      if (inCodeFence) output.push("<pre><code>" + escapeHtml(codeFence.join("\n")) + "</code></pre>");
+      flushMarkdownParagraph(paragraph, output);
+      flushMarkdownList(list, output);
+      return output.join("");
+    }
+
+    function looksLikeMarkdown(text) {
+      if (!text || !text.trim()) return false;
+      return /(^|\n)\s{0,3}#{1,6}\s+\S/.test(text)
+        || /(^|\n)\s*([-*+]|\d+[.)])\s+\S/.test(text)
+        || /(^|\n)>\s+\S/.test(text)
+        || /(^|\n)```/.test(text)
+        || /\*\*[^*]+\*\*/.test(text)
+        || /__[^_]+__/.test(text)
+        || /\[[^\]]+\]\([^)]+\)/.test(text);
+    }
+
+    function insertHtmlAtCursor(html) {
+      $("editor").focus();
+      if (document.queryCommandSupported && document.queryCommandSupported("insertHTML")) {
+        document.execCommand("insertHTML", false, html);
+        return;
+      }
+
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount) {
+        $("editor").insertAdjacentHTML("beforeend", html);
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      const template = document.createElement("template");
+      template.innerHTML = html;
+      range.insertNode(template.content);
+    }
+
+    function isSafeCssSize(value) {
+      return /^-?\d+(\.\d+)?(px|em|rem|%|pt)$/.test(value);
+    }
+
+    function isSafeCssColor(value) {
+      return /^(#[0-9a-f]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\)|[a-z]+|transparent|currentcolor)$/i.test(value.trim());
+    }
+
+    function collectSafeStyles(style, options = {}) {
+      const keepColors = options.keepColors !== false;
+      const keepBackgrounds = options.keepBackgrounds !== false;
+      const keepFontWeight = options.keepFontWeight !== false;
+      const keepFontFamily = options.keepFontFamily !== false;
+      const keep = [];
+      const push = (property, value, validator = Boolean) => {
+        if (value && validator(value)) keep.push(property + ":" + value);
+      };
+
+      if (keepFontWeight) push("font-weight", style.fontWeight);
+      push("font-style", style.fontStyle);
+      push("font-size", style.fontSize, isSafeCssSize);
+      if (keepFontFamily) push("font-family", style.fontFamily);
+      push("line-height", style.lineHeight, value => value === "normal" || isSafeCssSize(value) || /^\d+(\.\d+)?$/.test(value));
+      push("text-align", style.textAlign, value => /^(left|center|right|justify|start|end)$/.test(value));
+      push("text-decoration", style.textDecoration);
+      push("text-decoration-line", style.textDecorationLine);
+      push("text-transform", style.textTransform, value => /^(none|uppercase|lowercase|capitalize)$/.test(value));
+      push("letter-spacing", style.letterSpacing, value => value === "normal" || isSafeCssSize(value));
+      if (keepColors) push("color", style.color, isSafeCssColor);
+      if (keepBackgrounds) push("background-color", style.backgroundColor, isSafeCssColor);
+      push("margin-top", style.marginTop, isSafeCssSize);
+      push("margin-bottom", style.marginBottom, isSafeCssSize);
+      push("padding-left", style.paddingLeft, isSafeCssSize);
+      return keep;
+    }
+
+    function cleanRichElement(element, options = {}) {
+      [...element.attributes].forEach(attribute => {
+        const name = attribute.name.toLowerCase();
+        const value = attribute.value.trim().toLowerCase();
+        const unsafeLink = (name === "href" || name === "src") && value.startsWith("javascript:");
+        const keepHref = name === "href" && !unsafeLink;
+        const keepColspan = name === "colspan" || name === "rowspan";
+        if (name === "style" || keepHref || keepColspan) return;
+        if (name.startsWith("aria-")) return;
+        element.removeAttribute(attribute.name);
+      });
+
+      const safeStyles = collectSafeStyles(element.style, options);
+      if (safeStyles.length) element.setAttribute("style", safeStyles.join(";"));
+      else element.removeAttribute("style");
+    }
+
+    function cleanRichFragment(root, options = {}) {
+      root.querySelectorAll("script, style, iframe, object, embed, link, meta, svg, canvas, form, input, button").forEach(node => node.remove());
+      root.querySelectorAll("*").forEach(element => cleanRichElement(element, options));
+      return root;
+    }
+
+    function sanitizePastedHtml(html) {
+      const template = document.createElement("template");
+      const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+      template.innerHTML = bodyMatch ? bodyMatch[1] : html;
+      cleanRichFragment(template.content, { keepColors: true, keepBackgrounds: true, keepFontFamily: false });
+      return template.innerHTML;
+    }
+
+    function sanitizeEditorClone() {
+      const clone = $("editor").cloneNode(true);
+      cleanRichFragment(clone, { keepColors: false, keepBackgrounds: false, keepFontWeight: false, keepFontFamily: false });
+      return clone;
+    }
+
+    function expandStoredLineBreaks(root) {
+      const walker = document.createTreeWalker(
+        root,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode(node) {
+            return /[\r\n]/.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+          }
+        }
+      );
+      const lineBreakNodes = [];
+      while (walker.nextNode()) lineBreakNodes.push(walker.currentNode);
+
+      lineBreakNodes.forEach(node => {
+        const fragment = document.createDocumentFragment();
+        const parts = node.nodeValue.split(/\r\n|\r|\n/);
+        parts.forEach((part, index) => {
+          if (index > 0) fragment.appendChild(document.createElement("br"));
+          if (part) fragment.appendChild(document.createTextNode(part));
+        });
+        node.parentNode.replaceChild(fragment, node);
+      });
+    }
+
+    function createBlankLineAnchor() {
+      const anchor = document.createElement("span");
+      anchor.className = "blank-line-anchor";
+      anchor.setAttribute("aria-hidden", "true");
+      anchor.innerHTML = "&nbsp;";
+      return anchor;
+    }
+
+    function nodeIsBlankText(node) {
+      return node && node.nodeType === Node.TEXT_NODE && !node.nodeValue.replace(/\u00a0/g, " ").trim();
+    }
+
+    function nextNonBlankSibling(node) {
+      let next = node.nextSibling;
+      while (nodeIsBlankText(next)) next = next.nextSibling;
+      return next;
+    }
+
+    function markBlankWritingLines(root) {
+      const blockSelector = "p, div, li, blockquote, h1, h2, h3, h4, pre";
+      root.querySelectorAll(blockSelector).forEach(block => {
+        const text = block.textContent.replace(/[\u200b\u00a0]/g, "").trim();
+        const hasVisibleContent = text || block.querySelector(".word-token, img, table, hr, video");
+        if (hasVisibleContent) return;
+        block.innerHTML = "";
+        block.appendChild(createBlankLineAnchor());
+      });
+
+      [...root.querySelectorAll("br")].forEach(lineBreak => {
+        const next = nextNonBlankSibling(lineBreak);
+        if (next && next.nodeName === "BR") {
+          lineBreak.parentNode.insertBefore(createBlankLineAnchor(), next);
+        }
+      });
+    }
+
+    function prepareTokens() {
+      const previousIndex = currentIndex;
+      const clone = sanitizeEditorClone();
+      expandStoredLineBreaks(clone);
+      let index = 0;
+      const walker = document.createTreeWalker(
+        clone,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode(node) {
+            return /\S/.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+          }
+        }
+      );
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+      textNodes.forEach(node => {
+        const fragment = document.createDocumentFragment();
+        const parts = node.nodeValue.match(/\S+|\s+/g) || [];
+        parts.forEach(part => {
+          if (/\S/.test(part)) {
+            const span = document.createElement("span");
+            span.className = "word-token color-" + (index % 8);
+            span.dataset.index = String(index);
+            span.textContent = part;
+            fragment.appendChild(span);
+            index += 1;
+          } else {
+            fragment.appendChild(document.createTextNode(part));
+          }
+        });
+        node.parentNode.replaceChild(fragment, node);
+      });
+
+      markBlankWritingLines(clone);
+      const html = clone.innerHTML.trim();
+      $("display").innerHTML = html || '<p class="empty-display">Your board text will appear here.</p>';
+      tokens = [...$("display").querySelectorAll(".word-token")];
+      currentIndex = tokens.length ? Math.min(previousIndex, tokens.length - 1) : 0;
+      syncWordColorState();
+      highlightCurrent(false);
+      updateProgress();
+      scheduleGuideRender();
+    }
+
+    function ensureTokens() {
+      if (!tokens.length && $("editor").innerText.trim()) prepareTokens();
+      return tokens.length > 0;
+    }
+
+    function startPractice() {
+      if (!ensureTokens()) {
+        $("editor").focus();
+        return;
+      }
+      stopPlayback();
+      currentIndex = 0;
+      hitMilestones.clear();
+      prepareTokens();
+      highlightCurrent();
+      updateProgress();
+      play();
+    }
+
+    function play() {
+      if (!ensureTokens()) return;
+      isPlaying = true;
+      $("play-btn").textContent = "II";
+      $("play-btn").setAttribute("aria-label", "Pause");
+      $("play-btn").setAttribute("title", "Pause");
+      startInterval();
+    }
+
+    function stopPlayback() {
+      clearInterval(intervalId);
+      intervalId = null;
+      isPlaying = false;
+      $("play-btn").textContent = ">";
+      $("play-btn").setAttribute("aria-label", "Play");
+      $("play-btn").setAttribute("title", "Play");
+    }
+
+    function togglePlay() {
+      isPlaying ? stopPlayback() : play();
+    }
+
+    function startInterval() {
+      clearInterval(intervalId);
+      const wpm = Number($("speed").value);
+      intervalId = setInterval(() => {
+        if (!tokens.length) {
+          stopPlayback();
+          return;
+        }
+        if (currentIndex >= tokens.length - 1) {
+          currentIndex = tokens.length - 1;
+          highlightCurrent();
+          updateProgress();
+          maybeReward(100);
+          stopPlayback();
+          return;
+        }
+        currentIndex += 1;
+        highlightCurrent();
+        updateProgress();
+      }, 60000 / wpm);
+    }
+
+    function highlightCurrent(scroll = true) {
+      tokens.forEach(token => token.classList.remove("current-word"));
+      const token = tokens[currentIndex];
+      if (!token) return;
+      token.classList.add("current-word");
+      if (scroll) token.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    function nextWord() {
+      if (!ensureTokens()) return;
+      currentIndex = Math.min(tokens.length - 1, currentIndex + 1);
+      highlightCurrent();
+      updateProgress();
+    }
+
+    function previousWord() {
+      if (!ensureTokens()) return;
+      currentIndex = Math.max(0, currentIndex - 1);
+      highlightCurrent();
+      updateProgress();
+    }
+
+    function nextLine() {
+      moveLine(1);
+    }
+
+    function previousLine() {
+      moveLine(-1);
+    }
+
+    function moveLine(direction) {
+      if (!ensureTokens()) return;
+      const current = tokens[currentIndex];
+      const top = current.offsetTop;
+      let candidate = currentIndex;
+
+      if (direction > 0) {
+        for (let i = currentIndex + 1; i < tokens.length; i += 1) {
+          if (tokens[i].offsetTop > top + 8) {
+            candidate = i;
+            break;
+          }
+        }
+      } else {
+        for (let i = currentIndex - 1; i >= 0; i -= 1) {
+          if (tokens[i].offsetTop < top - 8) {
+            candidate = i;
+            while (candidate > 0 && Math.abs(tokens[candidate - 1].offsetTop - tokens[candidate].offsetTop) < 8) {
+              candidate -= 1;
+            }
+            break;
+          }
+        }
+      }
+
+      currentIndex = candidate;
+      highlightCurrent();
+      updateProgress();
+    }
+
+    function resetPractice() {
+      stopPlayback();
+      currentIndex = 0;
+      hitMilestones.clear();
+      prepareTokens();
+      highlightCurrent();
+      updateProgress();
+    }
+
+    function updateSpeed() {
+      const speed = $("speed").value;
+      $("speed-value").textContent = speed + " WPM";
+      $("focus-speed").textContent = speed + " WPM";
+      updateProgress();
+      if (isPlaying) startInterval();
+      saveState();
+    }
+
+    function updateDisplayStyle() {
+      const size = $("display-font-size").value;
+      const lineHeight = $("line-height").value;
+      const letterSpacing = $("letter-spacing").value;
+      const font = $("display-font").value;
+      const display = $("display");
+
+      display.style.fontSize = size + "px";
+      display.style.lineHeight = lineHeight;
+      display.style.letterSpacing = letterSpacing + "px";
+      applyWritingFont(font, { rebuild: writingFont !== font, save: false });
+      $("size-value").textContent = size;
+      $("line-height-value").textContent = lineHeight;
+      $("letter-spacing-value").textContent = letterSpacing + " px";
+      $("writing-area").classList.toggle("guides", $("guide-lines").checked);
+      scheduleGuideRender();
+      saveState();
+    }
+
+    function scheduleGuideRender() {
+      window.cancelAnimationFrame(guideRenderId);
+      window.clearTimeout(guideRenderTimer);
+      renderGuideLines();
+      guideRenderId = window.requestAnimationFrame(renderGuideLines);
+      guideRenderTimer = window.setTimeout(renderGuideLines, 60);
+    }
+
+    function renderGuideLines() {
+      const area = $("writing-area");
+      const layer = $("guide-layer");
+      const display = $("display");
+      if (!area || !layer || !display) return;
+
+      layer.innerHTML = "";
+      layer.style.height = Math.max(area.scrollHeight, area.clientHeight) + "px";
+
+      if (!$("guide-lines").checked) return;
+
+      const areaRect = area.getBoundingClientRect();
+      const fontSize = parseFloat(window.getComputedStyle(display).fontSize) || Number($("display-font-size").value);
+      const rects = [];
+
+      const lineAnchors = [...display.querySelectorAll(".word-token, .blank-line-anchor")];
+      lineAnchors.forEach(anchor => {
+        [...anchor.getClientRects()].forEach(rect => {
+          if (rect.width > 0 && rect.height > 0) {
+            rects.push({
+              top: rect.top,
+              bottom: rect.bottom,
+              center: rect.top + rect.height / 2
+            });
+          }
+        });
+      });
+
+      if (!rects.length) {
+        drawBlankGuideLines(area, layer, fontSize);
+        return;
+      }
+
+      rects.sort((a, b) => a.top - b.top || a.center - b.center);
+      const lines = [];
+      rects.forEach(rect => {
+        const last = lines[lines.length - 1];
+        if (last && rect.top <= last.bottom + 4 && rect.bottom >= last.top - 4) {
+          last.top = Math.min(last.top, rect.top);
+          last.bottom = Math.max(last.bottom, rect.bottom);
+          last.center = (last.center + rect.center) / 2;
+        } else {
+          lines.push({ ...rect });
+        }
+      });
+
+      lines.forEach((line, index) => {
+        const nextTop = lines[index + 1] ? lines[index + 1].top - areaRect.top + area.scrollTop : Infinity;
+        const visualBottom = line.bottom - areaRect.top + area.scrollTop;
+        const offset = Math.max(2, Math.min(5, fontSize * 0.09));
+        const y = Math.min(visualBottom + offset, nextTop - 5);
+        addGuideLine(layer, y);
+      });
+    }
+
+    function drawBlankGuideLines(area, layer, fontSize) {
+      const display = $("display");
+      const displayRect = display.getBoundingClientRect();
+      const areaRect = area.getBoundingClientRect();
+      const computed = window.getComputedStyle(display);
+      const lineHeight = parseFloat(computed.lineHeight) || fontSize * Number($("line-height").value);
+      const startY = displayRect.top - areaRect.top + area.scrollTop + lineHeight;
+      const maxY = Math.max(area.scrollHeight, area.clientHeight) - 8;
+      for (let y = startY; y < maxY; y += lineHeight) addGuideLine(layer, y);
+    }
+
+    function addGuideLine(layer, y) {
+      if (!Number.isFinite(y) || y < 0) return;
+      const line = document.createElement("div");
+      line.className = "guide-line";
+      line.style.top = Math.round(y) + "px";
+      layer.appendChild(line);
+    }
+
+    function updateProgress() {
+      const total = tokens.length;
+      const pct = total <= 1 ? (total ? 100 : 0) : Math.round((currentIndex / (total - 1)) * 100);
+      $("progress-fill").style.width = pct + "%";
+      $("focus-fill").style.width = pct + "%";
+      $("progress-text").textContent = pct + "% complete";
+      $("focus-percent").textContent = pct + "%";
+      $("position-text").textContent = total ? (currentIndex + 1) + " / " + total + " words" : "0 / 0 words";
+      $("word-count-label").textContent = total + (total === 1 ? " word" : " words");
+
+      const wpm = Number($("speed").value);
+      const minutesLeft = total ? Math.ceil(Math.max(total - currentIndex - 1, 0) / wpm) : 0;
+      $("time-text").textContent = minutesLeft + " min left";
+
+      milestones.forEach(milestone => {
+        if (pct >= milestone) maybeReward(milestone);
+      });
+    }
+
+    function maybeReward(milestone) {
+      if (!tokens.length || hitMilestones.has(milestone)) return;
+      hitMilestones.add(milestone);
+      const style = $("reward-style").value;
+      const messageSet = rewardMessages[style] || rewardMessages.encourage;
+      const [mark, title, message] = messageSet[milestone];
+      $("reward-mark").textContent = mark;
+      $("reward-title").textContent = title;
+      $("reward-msg").textContent = message;
+      const reward = $("reward");
+      reward.classList.remove("show");
+      void reward.offsetWidth;
+      reward.classList.add("show");
+    }
+
+    async function enterFocusMode() {
+      ensureTokens();
+      document.body.classList.add("focus");
+      syncFocusButtons();
+      highlightCurrent();
+      scheduleGuideRender();
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+      } catch (error) {
+        // Some browsers block fullscreen for local files. The focus layout still works.
+      }
+    }
+
+    async function exitFocusMode() {
+      document.body.classList.remove("focus");
+      syncFocusButtons();
+      scheduleGuideRender();
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+      } catch (error) {
+        // Leaving the CSS focus view is the important classroom behavior.
+      }
+    }
+
+    function toggleFocusMode() {
+      document.body.classList.contains("focus") ? exitFocusMode() : enterFocusMode();
+    }
+
+    function syncFocusButtons() {
+      const inFocus = document.body.classList.contains("focus");
+      $("top-focus-btn").textContent = inFocus ? "Exit Focus" : "Focus";
+      $("focus-toggle-btn").textContent = inFocus ? "Exit" : "Focus";
+      $("focus-toggle-btn").classList.toggle("primary", inFocus);
+    }
+
+    function printBoard() {
+      window.print();
+    }
+
+    function scheduleSave(status = "Saving...") {
+      $("save-status").textContent = status;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => saveState(), 250);
+    }
+
+    function saveState() {
+      const state = {
+        html: $("editor").innerHTML,
+        editorFont: $("editor-font").value,
+        editorFontSize,
+        theme: document.body.dataset.theme,
+        wordColors,
+        speed: $("speed").value,
+        displaySize: $("display-font-size").value,
+        lineHeight: $("line-height").value,
+        letterSpacing: $("letter-spacing").value,
+        displayFont: $("display-font").value,
+        rewardStyle: $("reward-style").value,
+        highlightStyle: $("highlight-style").value,
+        guideLines: $("guide-lines").checked
+      };
+      localStorage.setItem(storageKey, JSON.stringify(state));
+      $("save-status").textContent = "Saved";
+    }
+
+    function loadState() {
+      let state = null;
+      try {
+        state = JSON.parse(localStorage.getItem(storageKey) || "null");
+      } catch (error) {
+        state = null;
+      }
+
+      $("editor").innerHTML = state && state.html ? state.html : samples.primary;
+      editorFontSize = state && state.editorFontSize ? Number(state.editorFontSize) : 24;
+      $("editor").style.fontSize = editorFontSize + "px";
+
+      $("speed").value = state && state.speed ? state.speed : "20";
+      $("display-font-size").value = state && state.displaySize ? state.displaySize : "34";
+      $("line-height").value = state && state.lineHeight ? state.lineHeight : "1.65";
+      $("letter-spacing").value = state && state.letterSpacing ? state.letterSpacing : "0";
+      const savedFont = state && (state.displayFont || state.editorFont) ? (state.displayFont || state.editorFont) : "Atkinson Hyperlegible";
+      applyWritingFont(savedFont, { rebuild: false, save: false });
+      $("reward-style").value = state && state.rewardStyle ? state.rewardStyle : "encourage";
+      $("highlight-style").value = state && state.highlightStyle ? state.highlightStyle : "solid";
+      $("guide-lines").checked = Boolean(state && state.guideLines);
+      wordColors = Boolean(state && state.wordColors);
+
+      setTheme(state && state.theme ? state.theme : "paper");
+      setHighlightStyle($("highlight-style").value);
+      updateSpeed();
+      updateDisplayStyle();
+      prepareTokens();
+      syncWordColorState();
+      syncFocusButtons();
+      $("save-status").textContent = "Ready";
+    }
+
+    $("editor").addEventListener("input", () => {
+      stopPlayback();
+      currentIndex = 0;
+      hitMilestones.clear();
+      prepareTokens();
+      scheduleSave();
     });
-    const display=document.getElementById('display'); display.innerHTML=clone.innerHTML.trim()||'<span style="color:var(--muted)">Your formatted text will appear here.</span>';
-    if(wordColors) display.classList.add('word-color'); else display.classList.remove('word-color');
-    tokens=[...display.querySelectorAll('.word-token')]; currentIndex=Math.min(currentIndex,Math.max(tokens.length-1,0));
-  }
-  function startPractice(){
-    if(!document.getElementById('editor').innerText.trim()) return;
-    stopPlayback(); currentIndex=0; hitMilestones.clear(); prepareTokens(); updateDisplayStyle(); highlightCurrent(); updateProgress(); play();
-  }
-  function play(){if(!tokens.length) startPractice(); isPlaying=true; document.getElementById('play-btn').textContent='⏸'; startInterval();}
-  function stopPlayback(){clearInterval(intervalId); isPlaying=false; document.getElementById('play-btn').textContent='▶';}
-  function togglePlay(){isPlaying?stopPlayback():play();}
-  function startInterval(){clearInterval(intervalId); const wpm=+document.getElementById('speed').value; intervalId=setInterval(()=>{ if(currentIndex>=tokens.length-1){currentIndex=tokens.length-1; highlightCurrent(); updateProgress(); stopPlayback(); maybeReward(100); return;} currentIndex++; highlightCurrent(); updateProgress(); },60000/wpm);}
-  function highlightCurrent(){tokens.forEach(t=>t.classList.remove('current-word')); const token=tokens[currentIndex]; if(token){token.classList.add('current-word'); token.scrollIntoView({block:'center',behavior:'smooth'});}}
-  function nextWord(){if(!tokens.length) startPractice(); currentIndex=Math.min(tokens.length-1,currentIndex+1); highlightCurrent(); updateProgress();}
-  function previousWord(){currentIndex=Math.max(0,currentIndex-1); highlightCurrent(); updateProgress();}
-  function nextLine(){moveLine(1)} function previousLine(){moveLine(-1)}
-  function moveLine(dir){if(!tokens.length)return; const top=tokens[currentIndex].offsetTop; let candidate=currentIndex; if(dir>0){for(let i=currentIndex+1;i<tokens.length;i++){if(tokens[i].offsetTop>top+8){candidate=i;break;}}} else {for(let i=currentIndex-1;i>=0;i--){if(tokens[i].offsetTop<top-8){candidate=i; while(candidate>0 && Math.abs(tokens[candidate-1].offsetTop-tokens[candidate].offsetTop)<8)candidate--; break;}}} currentIndex=candidate; highlightCurrent(); updateProgress();}
-  function resetPractice(){stopPlayback(); currentIndex=0; hitMilestones.clear(); prepareTokens(); highlightCurrent(); updateProgress();}
-  function updateSpeed(){document.getElementById('speed-value').textContent=document.getElementById('speed').value+' WPM';document.getElementById('focus-speed').textContent=document.getElementById('speed').value+' WPM';updateProgress(); if(isPlaying)startInterval();}
-  function updateDisplayStyle(){const size=document.getElementById('display-font-size').value; const font=document.getElementById('display-font').value; const d=document.getElementById('display'); d.style.fontSize=size+'px'; d.style.fontFamily=font;}
-  function updateProgress(){const total=tokens.length||1; const pct=tokens.length?Math.min(100,Math.round(((currentIndex+1)/total)*100)):0; ['progress-fill','focus-fill'].forEach(id=>document.getElementById(id).style.width=pct+'%'); document.getElementById('progress-text').textContent=pct+'% complete'; document.getElementById('focus-percent').textContent=pct+'%'; const wpm=+document.getElementById('speed').value; const mins=Math.ceil(Math.max(total-currentIndex-1,0)/wpm); document.getElementById('time-text').textContent=mins+' min left'; milestones.forEach(m=>{if(pct>=m)maybeReward(m)});}
-  function maybeReward(m){if(hitMilestones.has(m))return; hitMilestones.add(m); const [icon,title,msg]=messages[m]; const style=document.getElementById('reward-style').value; document.getElementById('reward-icon').textContent=style==='simple'?'✓':icon; document.getElementById('reward-title').textContent=title; document.getElementById('reward-msg').textContent=msg; const r=document.getElementById('reward'); r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');}
-  async function enterFocusMode(){if(!tokens.length && document.getElementById('editor').innerText.trim()) startPractice(); document.body.classList.add('focus'); try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); }catch(e){} highlightCurrent();}
-  async function exitFocusMode(){document.body.classList.remove('focus'); try{ if(document.fullscreenElement) await document.exitFullscreen(); }catch(e){}}
-  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('focus')});
-  document.getElementById('editor').addEventListener('paste',e=>{setTimeout(()=>{prepareTokens();updateDisplayStyle();highlightCurrent();updateProgress();},0)});
-  document.getElementById('editor').innerHTML='<ol><li><b>Good handwriting</b> shows clear thinking.</li><li><i>Write slowly</i>, keep spaces, and finish with confidence.</li><li><u>Every line completed</u> is progress.</li></ol>';
-  window.onload=()=>{prepareTokens();updateDisplayStyle();updateSpeed();highlightCurrent();updateProgress();};
-</script>
+
+    $("editor").addEventListener("paste", event => {
+      const text = event.clipboardData ? event.clipboardData.getData("text/plain") : "";
+      const html = event.clipboardData ? event.clipboardData.getData("text/html") : "";
+      let pasteLabel = "Pasted";
+
+      if (html) {
+        event.preventDefault();
+        insertHtmlAtCursor(sanitizePastedHtml(html));
+        pasteLabel = "Rich text pasted";
+      } else if (text) {
+        event.preventDefault();
+        insertHtmlAtCursor(looksLikeMarkdown(text) ? markdownToHtml(text) : escapeHtml(text).replace(/\n/g, "<br>"));
+        pasteLabel = looksLikeMarkdown(text) ? "Markdown pasted" : "Plain text pasted";
+      }
+
+      window.setTimeout(() => {
+        stopPlayback();
+        currentIndex = 0;
+        prepareTokens();
+        scheduleSave(pasteLabel);
+      }, 0);
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement && document.body.classList.contains("focus")) {
+        document.body.classList.remove("focus");
+        syncFocusButtons();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      const editing = document.activeElement === $("editor") || ["INPUT", "SELECT"].includes(document.activeElement.tagName);
+      if (editing) return;
+      if (event.key === " ") {
+        event.preventDefault();
+        togglePlay();
+      } else if (event.key === "ArrowRight") {
+        nextWord();
+      } else if (event.key === "ArrowLeft") {
+        previousWord();
+      } else if (event.key === "Escape" && document.body.classList.contains("focus")) {
+        exitFocusMode();
+      }
+    });
+
+    window.addEventListener("resize", scheduleGuideRender);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleGuideRender);
+    if ("ResizeObserver" in window) {
+      const guideObserver = new ResizeObserver(scheduleGuideRender);
+      guideObserver.observe($("writing-area"));
+      guideObserver.observe($("display"));
+    }
+
+    loadState();
+  </script>
 </body>
 </html>
